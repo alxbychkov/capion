@@ -12,6 +12,7 @@
                     <p class="user-name">Alex</p>
                     <p class="user-address">wef2sdsada24f3ds</p>
                 </a>
+                <a href="#" class="contact-us-btn">Contact us</a>
                 <a href="#" class="login-icon">
                     <svg width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.5002 0.449951C10.3232 0.449951 0.450195 10.3229 0.450195 22.4999C0.450195 34.6769 10.3232 44.5499 22.5002 44.5499C34.6772 44.5499 44.5502 34.6769 44.5502 22.4999C44.5502 10.3229 34.6772 0.449951 22.5002 0.449951ZM22.5002 7.04245C26.5277 7.04245 29.7947 10.3095 29.7947 14.3369C29.7947 18.3644 26.5277 21.6314 22.5002 21.6314C18.4727 21.6314 15.2057 18.3644 15.2057 14.3369C15.2057 10.3095 18.4727 7.04245 22.5002 7.04245ZM22.4957 38.7854C18.4772 38.7854 14.7962 37.3229 11.9567 34.9019C11.2637 34.3124 10.8677 33.4484 10.8677 32.5394C10.8677 28.4534 14.1752 25.1864 18.2612 25.1864H26.7482C30.8342 25.1864 34.1282 28.4534 34.1282 32.5394C34.1282 33.4484 33.7322 34.3124 33.0392 34.9019C30.1952 37.3184 26.5142 38.7854 22.4957 38.7854Z" fill="white"/>
@@ -20,6 +21,78 @@
             </div>
         </header>
         <main class="main">
+            <div class="monitoring-section border-shadow">
+                <div class="section-header">
+                    <div class="section__title">Flex</div>
+                    <div class="strategy-actions">
+                        <button class="st-actions-btn yellow">Pause</button>
+                        <button class="st-actions-btn red">Emergen withdraw</button>
+                    </div>
+                </div>
+                <div class="strategy-info">
+                    <div class="strategy-info-item">
+                        <p class="info-text">50%</p>
+                        <p class="info-text">Leveraged strategy Aave on InstaDapp</p>
+                        <ul class="info-list">
+                            <li>6X USDC Collateral/ 5X USDC Loan</li>
+                            <li>84% collateral factor</li>
+                            <li>AAVE farming rewards (staking 10d cool-off)</li>
+                            <li>INST farming rewards</li>
+                            <li>Volatility only of farming rewards</li>
+                        </ul>
+                    </div>
+                    <div class="strategy-info-item">
+                        <p class="info-text">25%</p>
+                        <p class="info-text">Market-Making on Uniswap v3</p>
+                        <ul class="info-list">
+                            <li>DAI/ETH Liquidity pool</li>
+                            <li>Interval (+30%/-30%)</li>
+                            <li>Periodical rebalancing</li>
+                            <li>Commissions in DAI/ETH</li>
+                        </ul>
+                    </div>
+                    <div class="strategy-info-item">
+                        <p class="info-text">25%</p>
+                        <p class="info-text">Market-Making on Sushiswap</p>
+                        <ul class="info-list">
+                            <li>YYDAI/ETH Liquidity pool</li>
+                            <li>YYDAI Yearn+Curve asset</li>
+                            <li>SUSHI farming rewards</li>
+                            <li>Trading commissions</li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="rebalance-btn">Rebalance share</button> 
+                <div class="strategy-assets">
+                    <div class="asset-row">
+                        <div class="asset-row__name">APY</div>
+                        <div class="asset-row__number">20.234%</div>
+                    </div>
+                    <div class="asset-row double-row">
+                        <div class="asset-row__name">Risk Factor</div>
+                        <div class="asset-row__number">1/5</div>
+                    </div>
+                    <div class="asset-row">
+                        <div class="asset-row__name">Total investments</div>
+                        <div class="asset-row__number">$100,234,345.34</div>
+                    </div>
+                </div>
+                <div class="strategy-bottom">
+                    <p class="strategy-bottom-text">Status: Paused</p>
+                    <p class="strategy-bottom-text">Recent activity</p>
+                    <div class="strategy-bottom-grid">
+                        <span class="st-grid-title">Assets</span>
+                        <span class="st-grid-title">Discription</span>
+                        <span class="st-grid-title align-end">Balance</span>
+                        <span class="st-grid-span">USDT</span>
+                        <span class="st-grid-span">Deposit</span>
+                        <span class="st-grid-span color-green align-end">$123,232.23</span>
+                        <span class="st-grid-span">ETH</span>
+                        <span class="st-grid-span">Withdraw</span>
+                        <span class="st-grid-span color-red align-end">$100.23</span>
+                    </div>
+                </div>               
+            </div>
             <div class="graph-section section border-shadow">
                 <div class="section-header">
                     <div class="section__title">My portfolio</div>
@@ -92,7 +165,7 @@
             <div class="button-section">
                 <button class="big-btn">Construct strategy</button>
             </div>
-            <div class="modal-window show">
+            <div class="modal-window">
                 <div class="modal-overlay"></div>
                 <div class="modal-body">
                     <p class="modal-title">Balanced withdraw</p>
@@ -108,6 +181,22 @@
                         <button class="modal-btn">Withdraw</button>
                     </div>
                 </div>
+            </div>
+            <div class="modal-window">
+                <div class="modal-overlay"></div>
+                <div class="modal-body login">
+                    <p class="modal-title">Choose wallet</p>
+                    <div class="login-form">
+                        <input type="text" class="modal-login-input" placeholder="User">
+                        <input type="password" class="modal-login-input" placeholder="Password">
+                        <button class="connect-btn">Connect wallet</button>
+                    </div>
+                </div>
+            </div>
+            <div class="section-no-login border-shadow">
+                <p class="no-login-row"></p>
+                <p class="no-login-row">Please log in to see your portfolio</p>
+                <button class="log-in-btn">Log in</button>
             </div>
         </main>
         <footer class="footer">
