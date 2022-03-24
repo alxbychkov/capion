@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div class="wrapper">
-      <Header :isAuthorised="isAuthorised" />
-      <main class="main" :class="!isAuthorised ? 'no-auth' : ''">
+      <Header />
+      <main class="main" :class="!isAUTHORISED ? 'no-auth' : ''">
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
@@ -15,14 +15,20 @@
 import "./index.css";
 import Footer from "./components/basic/Footer.vue";
 import Header from "./components/basic/Header.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "App",
   components: { Header, Footer },
   data() {
-    return {
-      isAuthorised: true,
-    };
+    return {};
   },
+  methods: {
+    ...mapActions(["GET_isAUTHORISED"]),
+  },
+  computed: {
+    ...mapGetters(["isAUTHORISED"]),
+  },
+  created() {},
 };
 </script>

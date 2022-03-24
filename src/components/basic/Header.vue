@@ -4,7 +4,7 @@
       <a :href="href" class="project-logo" @click="navigate"><ProjectLogo /></a>
     </router-link>
     <div class="header-login">
-      <a href="#" class="user-info" v-if="isAuthorised">
+      <a href="#" class="user-info" v-if="isAUTHORISED">
         <p class="user-name">Alex</p>
         <p class="user-address">wef2sdsada24f3ds</p>
       </a>
@@ -14,23 +14,17 @@
   </header>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import ProjectLogo from "./Logo.vue";
 import LoginIcon from "./LoginIcon.vue";
 
 export default {
   name: "Header",
   components: { ProjectLogo, LoginIcon },
-  props: {
-    isAuthorised: {
-      type: Boolean,
-      default() {
-        return false;
-      },
-    },
+  computed: {
+    ...mapGetters(["isAUTHORISED"]),
   },
-  mounted() {
-    console.log("auth", this.isAuthorised);
-  },
+  mounted() {},
 };
 </script>
 <style scoped>

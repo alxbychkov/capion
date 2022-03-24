@@ -2,12 +2,22 @@
   <div class="section-no-login border-shadow">
     <p class="no-login-row"></p>
     <p class="no-login-row">Please log in to see your portfolio</p>
-    <button class="log-in-btn">Log in</button>
+    <button class="log-in-btn" @click="isShowModal = true">Log in</button>
+    <login-modal :isShow="isShowModal" @close="isShowModal = false" />
   </div>
 </template>
 <script>
+import LoginModal from "./LoginModal.vue";
+
 export default {
+  components: { LoginModal },
   name: "NoLoginForm",
+  data() {
+    return {
+      isShowModal: false,
+    };
+  },
+  methods: {},
 };
 </script>
 <style scoped>
