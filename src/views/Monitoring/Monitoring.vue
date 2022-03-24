@@ -1,0 +1,257 @@
+<template>
+  <div class="monitoring-section border-shadow">
+    <div class="section-header">
+      <div class="section__title">Flex</div>
+      <div class="strategy-actions">
+        <button class="st-actions-btn yellow">Pause</button>
+        <button class="st-actions-btn red">Emergen withdraw</button>
+      </div>
+    </div>
+    <div class="strategy-info">
+      <div class="strategy-info-item">
+        <p class="info-text">50%</p>
+        <p class="info-text">Leveraged strategy Aave on InstaDapp</p>
+        <ul class="info-list">
+          <li>6X USDC Collateral/ 5X USDC Loan</li>
+          <li>84% collateral factor</li>
+          <li>AAVE farming rewards (staking 10d cool-off)</li>
+          <li>INST farming rewards</li>
+          <li>Volatility only of farming rewards</li>
+        </ul>
+      </div>
+      <div class="strategy-info-item">
+        <p class="info-text">25%</p>
+        <p class="info-text">Market-Making on Uniswap v3</p>
+        <ul class="info-list">
+          <li>DAI/ETH Liquidity pool</li>
+          <li>Interval (+30%/-30%)</li>
+          <li>Periodical rebalancing</li>
+          <li>Commissions in DAI/ETH</li>
+        </ul>
+      </div>
+      <div class="strategy-info-item">
+        <p class="info-text">25%</p>
+        <p class="info-text">Market-Making on Sushiswap</p>
+        <ul class="info-list">
+          <li>YYDAI/ETH Liquidity pool</li>
+          <li>YYDAI Yearn+Curve asset</li>
+          <li>SUSHI farming rewards</li>
+          <li>Trading commissions</li>
+        </ul>
+      </div>
+    </div>
+    <button class="rebalance-btn">Rebalance share</button>
+    <div class="strategy-assets">
+      <div class="asset-row">
+        <div class="asset-row__name">APY</div>
+        <div class="asset-row__number">20.234%</div>
+      </div>
+      <div class="asset-row double-row">
+        <div class="asset-row__name">Risk Factor</div>
+        <div class="asset-row__number">1/5</div>
+      </div>
+      <div class="asset-row">
+        <div class="asset-row__name">Total investments</div>
+        <div class="asset-row__number">$100,234,345.34</div>
+      </div>
+    </div>
+    <div class="strategy-bottom">
+      <p class="strategy-bottom-text">Status: Paused</p>
+      <p class="strategy-bottom-text">Recent activity</p>
+      <div class="strategy-bottom-grid">
+        <span class="st-grid-title">Assets</span>
+        <span class="st-grid-title">Discription</span>
+        <span class="st-grid-title align-end">Balance</span>
+        <span class="st-grid-span">USDT</span>
+        <span class="st-grid-span">Deposit</span>
+        <span class="st-grid-span color-green align-end">$123,232.23</span>
+        <span class="st-grid-span">ETH</span>
+        <span class="st-grid-span">Withdraw</span>
+        <span class="st-grid-span color-red align-end">$100.23</span>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: "Monitoring",
+};
+</script>
+<style scoped>
+.monitoring-section {
+  padding: 30px 60px;
+}
+
+.strategy-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  margin-bottom: 27px;
+}
+
+.strategy-info-item {
+  width: 30%;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #fff;
+}
+
+.strategy-info-item:first-child {
+  width: 40%;
+}
+
+.info-list {
+  list-style: none;
+}
+.info-list li {
+  padding-right: 5px;
+}
+.info-list li::before {
+  content: "-";
+  margin-right: 5px;
+}
+
+.rebalance-btn {
+  background: #92df95;
+  box-shadow: 0px 0px 10px #92df95;
+  border-radius: 15px;
+  padding: 6px 46px;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.strategy-assets {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 270px;
+  row-gap: 20px;
+  column-gap: 60px;
+}
+
+.asset-row {
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 30px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #323030;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+}
+
+.asset-row.double-row {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  flex-direction: column;
+}
+
+.asset-row__name,
+.asset-row__number {
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 30px;
+  color: #fff;
+}
+
+.asset-row__number {
+  color: #92df95;
+}
+
+.asset-row.double-row .asset-row__number {
+  font-weight: 700;
+  font-size: 70px;
+  line-height: 85px;
+}
+
+.strategy-bottom {
+  background: #323030;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 24px 30px 100px;
+  margin-top: 30px;
+  color: #fff;
+}
+
+.strategy-bottom-text {
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 30px;
+  margin-bottom: 24px;
+}
+
+.strategy-bottom-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr 2fr;
+  row-gap: 23px;
+}
+
+.st-grid-title {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.st-grid-span {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.st-grid-span.color-green {
+  color: #92df95;
+}
+
+.st-grid-span.color-red {
+  color: #ff1414;
+}
+
+.strategy-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.st-actions-btn {
+  border-radius: 15px;
+  padding: 2px 10px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.st-actions-btn:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+
+.st-actions-btn.yellow {
+  background: #ecd401;
+  box-shadow: 0px 0px 10px #ecd401;
+}
+
+.st-actions-btn.red {
+  background: #ff1414;
+  box-shadow: 0px 0px 10px #ff1414;
+}
+
+.monitoring-section .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+</style>

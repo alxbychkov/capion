@@ -1,0 +1,129 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+}
+
+body.dark-theme {
+  background-color: #323030;
+}
+
+a {
+  text-decoration: none;
+  color: initial;
+}
+
+.wrapper {
+  max-width: 1090px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  padding: 0 20px;
+}
+
+.main.no-auth {
+  margin: auto 0;
+}
+
+.border-shadow {
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+}
+
+.section {
+  background: #323030;
+  padding: 20px 60px 50px;
+}
+
+.section__title {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 37px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.align-end {
+  text-align: end;
+}
+
+.grid-header {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #fff;
+}
+
+.grid-span {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: #fff;
+}
+
+.grid-header.align-end,
+.grid-span.align-end {
+  text-align: end;
+}
+
+.grid-span.color-green {
+  color: #92df95;
+}
+
+.modal-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: -1;
+  display: flex;
+}
+
+.modal-window.show {
+  opacity: 1;
+  z-index: 10;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+}
+
+.modal-body {
+  padding: 30px 60px;
+  background: #323030;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  margin: auto;
+  z-index: 11;
+}
+
+.modal-title {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 37px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.modal-body-bottom {
+  display: flex;
+  justify-content: flex-end;
+}
