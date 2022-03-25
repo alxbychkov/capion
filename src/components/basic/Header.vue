@@ -5,7 +5,7 @@
     </router-link>
     <div class="header-login">
       <a href="#" class="user-info" v-if="isAUTHORISED">
-        <p class="user-name">Alex</p>
+        <p class="user-name">Admin</p>
         <p class="user-address">wef2sdsada24f3ds</p>
       </a>
       <a href="#" v-else class="contact-us-btn">Contact us</a>

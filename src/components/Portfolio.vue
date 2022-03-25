@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="graph-section section border-shadow">
+    <div
+      v-if="USER_STRATEGIES.length"
+      class="graph-section section border-shadow"
+    >
       <div class="section-header">
         <div class="section__title">My portfolio</div>
       </div>
@@ -28,39 +31,127 @@
       </div>
       <div class="portfolio-section section border-shadow">
         <div class="portfolio-grid grid">
-          <span class="grid-header">Assets</span>
-          <span class="grid-header align-end">Portfolio share</span>
-          <span class="grid-header">Status</span>
-          <span class="grid-header">Total investment</span>
-          <span class="grid-header">Risk Factor</span>
-          <span class="grid-header">APY</span>
-          <span class="grid-header"></span>
-          <span class="grid-span">Flex</span>
-          <span class="grid-span align-end">93.23%</span>
-          <span class="grid-span">Active</span>
-          <span class="grid-span">$463,000,76</span>
-          <span class="grid-span color-green">1/5</span>
-          <span class="grid-span">13.23%</span>
-          <router-link to="/monitoring" custom v-slot="{ href, navigate }">
-            <a :href="href" class="grid-span settings" @click="navigate"></a>
-          </router-link>
+          <div class="portfolio-grid-row">
+            <span class="grid-header">Assets</span>
+            <span class="grid-header align-end">Portfolio share</span>
+            <span class="grid-header">Status</span>
+            <span class="grid-header">Total investment</span>
+            <span class="grid-header">Risk Factor</span>
+            <span class="grid-header">APY</span>
+            <span class="grid-header"></span>
+          </div>
+          <div
+            class="portfolio-grid-row"
+            v-for="strategy in USER_STRATEGIES"
+            :key="strategy.id"
+          >
+            <span class="grid-span">{{ strategy.name }}</span>
+            <span class="grid-span align-end">93.23%</span>
+            <span class="grid-span">Active</span>
+            <span class="grid-span">$463,000,76</span>
+            <span class="grid-span color-green">{{
+              strategy.risk_factor
+            }}</span>
+            <span class="grid-span">{{ strategy.apy }}</span>
+            <router-link
+              :to="{ name: 'Monitoring', params: { id: strategy.id } }"
+              custom
+              v-slot="{ href, navigate }"
+            >
+              <a :href="href" class="grid-span settings" @click="navigate"></a>
+            </router-link>
+          </div>
         </div>
-        <div class="portfolio-section-bottom">
-          <button class="action-btn">Add more assets</button>
-          <button class="action-btn">Reinvest</button>
-          <button class="action-btn">Withdraw money</button>
-          <button class="action-btn">Rebalance assets</button>
+
+        <div v-if="USER_STRATEGIES.length" class="portfolio-section-bottom">
+          <button class="action-btn" @click="actionBtnClickHandler('deposit')">
+            Add more assets
+          </button>
+          <button class="action-btn" disabled>Reinvest</button>
+          <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
+            Withdraw money
+          </button>
+          <button class="action-btn" disabled>Rebalance assets</button>
         </div>
       </div>
     </div>
     <router-link to="/addition" custom v-slot="{ href, navigate }">
       <a :href="href" class="button-link" @click="navigate">Add new strategy</a>
     </router-link>
+    <action-modal
+      v-if="isShowModal"
+      :isShow="isShowModal"
+      :modalAction="modalAction"
+      @close="closeModal"
+      @actionButtonMethod="this.modalAction.strategy.method"
+    />
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import ActionModal from "./ActionModal.vue";
+import { MODAL_TYPES } from "../helpers/modalTypes";
+
 export default {
   name: "Portfolio",
+  components: { ActionModal },
+  data() {
+    return {
+      isShowModal: false,
+      modalAction: "",
+    };
+  },
+  methods: {
+    ...mapActions(["GET_USER_STRATEGIES"]),
+
+    actionBtnClickHandler(action) {
+      switch (action) {
+        case "deposit":
+          this.modalAction = {
+            type: MODAL_TYPES.DEPOSIT,
+            strategy: {
+              total: "$100,234.324",
+              name: "Flex",
+              number: "90%",
+              method: this.deposit,
+            },
+          };
+          break;
+        case "withdraw":
+          this.modalAction = {
+            type: MODAL_TYPES.WITHDRAW,
+            strategy: {
+              total: "",
+              name: "Flex",
+              number: "$123,234.923",
+              method: this.withdraw,
+            },
+          };
+      }
+
+      this.isShowModal = true;
+    },
+
+    deposit(value) {
+      console.log("deposit", value);
+    },
+
+    withdraw(value) {
+      console.log("withdraw", value);
+    },
+
+    closeModal() {
+      this.modalAction = "";
+      this.isShowModal = false;
+    },
+  },
+  computed: {
+    ...mapGetters(["USER_STRATEGIES"]),
+  },
+  created() {
+    this.GET_USER_STRATEGIES();
+  },
+  mounted() {},
 };
 </script>
 <style scoped>
@@ -175,11 +266,16 @@ export default {
   cursor: pointer;
 }
 
-.portfolio-grid {
+.action-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.portfolio-grid-row {
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr 2fr 1.5fr 1fr 22px;
-  row-gap: 28px;
   column-gap: 20px;
+  margin-bottom: 28px;
 }
 
 .settings::after {

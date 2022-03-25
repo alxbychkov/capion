@@ -1,7 +1,7 @@
 <template>
-  <div class="monitoring-section border-shadow">
+  <div v-if="strategy.name" class="monitoring-section border-shadow">
     <div class="section-header">
-      <div class="section__title">Flex</div>
+      <div class="section__title">{{ strategy.name }}</div>
       <div class="strategy-actions">
         <button class="st-actions-btn yellow">Pause</button>
         <button class="st-actions-btn red">Emergen withdraw</button>
@@ -73,13 +73,24 @@
   </div>
 </template>
 <script>
+import { getStrategy } from "../../core/api.js";
+
 export default {
   name: "Monitoring",
+  data() {
+    return {
+      strategy: "",
+    };
+  },
+  created() {
+    getStrategy(this.$route.params.id).then((res) => (this.strategy = res));
+  },
 };
 </script>
 <style scoped>
 .monitoring-section {
   padding: 30px 60px;
+  margin-bottom: 50px;
 }
 
 .strategy-info {

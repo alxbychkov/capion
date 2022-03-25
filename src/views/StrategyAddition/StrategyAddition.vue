@@ -5,16 +5,32 @@
         <div class="section__title">Strategy addition</div>
       </div>
       <div class="strategy-grid border-shadow">
-        <span class="grid-header">Strategies</span>
-        <span class="grid-header">Risk Factor</span>
-        <span class="grid-header">APY</span>
-        <span class="grid-header">Type</span>
-        <span class="grid-header"></span>
-        <span class="grid-span">Flex</span>
-        <span class="grid-span color-green">1/5</span>
-        <span class="grid-span">1.23%</span>
-        <span class="grid-span">Cascade</span>
-        <span class="grid-span add">Add</span>
+        <div class="strategy-grid-row grid-row-header">
+          <p class="grid-header question">Strategies</p>
+          <p class="grid-header question">Risk Factor</p>
+          <p class="grid-header question">APY</p>
+          <p class="grid-header question">Type</p>
+          <p class="grid-header"></p>
+        </div>
+        <div
+          class="strategy-grid-row"
+          v-for="strategy in allStrategies"
+          :key="strategy.id"
+        >
+          <span class="grid-span">{{ strategy.name }}</span>
+          <span class="grid-span color-green">{{ strategy.risk_factor }}</span>
+          <span class="grid-span">{{ strategy.apy }}</span>
+          <span class="grid-span">{{ strategy.type }}</span>
+          <button
+            class="grid-span add"
+            :disabled="isUserHaveStrategy(strategy.id)"
+            :data-id="strategy.id"
+            ref="addStrategyBtn"
+            @click="addStrategyHandler(strategy.id)"
+          >
+            Add
+          </button>
+        </div>
       </div>
     </div>
     <div class="button-section">
@@ -23,8 +39,47 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import router from "../../router";
+
 export default {
   name: "StrategyAddition",
+  data() {
+    return {
+      allStrategies: [],
+      userStrategies: [],
+    };
+  },
+  methods: {
+    ...mapActions(["GET_ALL_STRATEGIES", "GET_USER_STRATEGIES"]),
+
+    addStrategyHandler(id) {
+      if (!id) return;
+      const userStrategy = this.allStrategies.find((s) => s.id === id);
+      this.GET_USER_STRATEGIES(userStrategy);
+      for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
+        if (btn.dataset.id === id.toString())
+          this.$refs.addStrategyBtn[key].disabled = true;
+      }
+      router.push("/");
+    },
+
+    isUserHaveStrategy(id) {
+      return this.userStrategies.includes(id);
+    },
+  },
+  computed: {
+    ...mapGetters(["ALL_STRATEGIES", "USER_STRATEGIES"]),
+  },
+  created() {
+    this.GET_USER_STRATEGIES().then((res) => {
+      res.forEach((s) => {
+        this.userStrategies.push(s.id);
+      });
+    });
+    this.GET_ALL_STRATEGIES().then((res) => (this.allStrategies = [...res]));
+  },
+  mounted() {},
 };
 </script>
 <style scoped>
@@ -36,10 +91,13 @@ export default {
 .strategy-grid {
   margin-top: 20px;
   padding: 24px 60px 70px;
+}
+
+.strategy-grid-row {
   display: grid;
   grid-template-columns: 1.5fr 1.5fr 1fr 1fr 70px;
-  row-gap: 28px;
   column-gap: 20px;
+  margin-bottom: 28px;
 }
 
 .grid-span.add {
@@ -52,6 +110,16 @@ export default {
   font-size: 16px;
   line-height: 20px;
   cursor: pointer;
+}
+
+button.grid-span {
+  outline: none;
+  border: none;
+}
+
+button.grid-span:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 .big-btn {
@@ -73,5 +141,22 @@ export default {
   color: #fff;
   cursor: pointer;
   margin-bottom: 50px;
+}
+
+.question::after {
+  content: "?";
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 15px;
+  color: #fff;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  margin-left: 7px;
+  display: inline-block;
+  width: 17px;
+  height: 17px;
+  text-align: center;
+  transform: translateY(-2px);
 }
 </style>
