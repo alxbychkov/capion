@@ -19,7 +19,7 @@
         >
           <span class="grid-span">{{ strategy.name }}</span>
           <span class="grid-span color-green">{{ strategy.risk_factor }}</span>
-          <span class="grid-span">{{ strategy.apy }}</span>
+          <span class="grid-span">{{ strategy.apy }}%</span>
           <span class="grid-span">{{ strategy.type }}</span>
           <button
             class="grid-span add"
@@ -40,6 +40,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
+// import { deployStrategy } from '../../core/api';
 import router from "../../router";
 
 export default {
@@ -53,7 +54,7 @@ export default {
   methods: {
     ...mapActions(["GET_ALL_STRATEGIES", "GET_USER_STRATEGIES"]),
 
-    addStrategyHandler(id) {
+    async addStrategyHandler(id) {
       if (!id) return;
       const userStrategy = this.allStrategies.find((s) => s.id === id);
       this.GET_USER_STRATEGIES(userStrategy);
@@ -61,6 +62,7 @@ export default {
         if (btn.dataset.id === id.toString())
           this.$refs.addStrategyBtn[key].disabled = true;
       }
+      // await deployStrategy(id);
       router.push("/");
     },
 

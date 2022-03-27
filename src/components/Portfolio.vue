@@ -8,17 +8,23 @@
         <div class="section__title">My portfolio</div>
       </div>
       <div class="graph-body">
-        <div class="portfolio-body__item border-shadow">
-          <p class="portfoli-body__title">Flex</p>
-          <div class="portfolio-body__graph"></div>
+        <div 
+            v-for="strategy in USER_STRATEGIES"
+            :key="strategy.id"
+            class="portfolio-body__item border-shadow"
+        >
+          <p class="portfoli-body__title">{{ strategy.name }}</p>
+          <div class="portfolio-body__graph">
+            <Chart/>
+          </div>
           <div class="portfolio-body__bottom">
             <div class="portfolio-bottom-coll">
               <p class="coll__title">Total assets</p>
-              <p class="coll__price">$345,234.53</p>
+              <p class="coll__price">${{ strategy.totalInvestment }}</p>
             </div>
             <div class="portfolio-bottom-coll">
               <p class="coll__title">APY</p>
-              <p class="coll__price">32.56%</p>
+              <p class="coll__price">{{ strategy.apy }}%</p>
             </div>
           </div>
         </div>
@@ -27,7 +33,7 @@
     <div class="portfolio">
       <div class="portfolio-header">
         <p class="portfolio-header__title">Portfolio</p>
-        <p class="portfolio-header__total">$1,004,533</p>
+        <p class="portfolio-header__total">${{ allTotalInvestment }}</p>
       </div>
       <div class="portfolio-section section border-shadow">
         <div class="portfolio-grid grid">
@@ -46,13 +52,13 @@
             :key="strategy.id"
           >
             <span class="grid-span">{{ strategy.name }}</span>
-            <span class="grid-span align-end">93.23%</span>
-            <span class="grid-span">Active</span>
-            <span class="grid-span">$463,000,76</span>
+            <span class="grid-span align-end">{{ strategy.portfolioShare }}%</span>
+            <span class="grid-span">{{ strategy.isActive ? 'Active' : 'Inactive' }}</span>
+            <span class="grid-span">${{ strategy.totalInvestment }}</span>
             <span class="grid-span color-green">{{
               strategy.risk_factor
             }}</span>
-            <span class="grid-span">{{ strategy.apy }}</span>
+            <span class="grid-span">{{ strategy.apy }}%</span>
             <router-link
               :to="{ name: 'Monitoring', params: { id: strategy.id } }"
               custom
@@ -65,10 +71,10 @@
 
         <div v-if="USER_STRATEGIES.length" class="portfolio-section-bottom">
           <button class="action-btn" @click="actionBtnClickHandler('deposit')">
-            Add more assets
+            Deposit
           </button>
           <button class="action-btn" disabled>Reinvest</button>
-          <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
+          <button class="action-btn" @click="actionBtnClickHandler('withdraw')" :disabled="+USER_STRATEGIES[0].totalInvestment">
             Withdraw money
           </button>
           <button class="action-btn" disabled>Rebalance assets</button>
@@ -91,10 +97,12 @@
 import { mapGetters, mapActions } from "vuex";
 import ActionModal from "./ActionModal.vue";
 import { MODAL_TYPES } from "../helpers/modalTypes";
+import { firstStrategyDeposit, strategyAllWithdraw, strategyDeposit, strategyWithdraw } from '../core/api';
+import Chart from './elements/Chart.vue';
 
 export default {
   name: "Portfolio",
-  components: { ActionModal },
+  components: { ActionModal, Chart },
   data() {
     return {
       isShowModal: false,
@@ -110,9 +118,10 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.DEPOSIT,
             strategy: {
-              total: "$100,234.324",
-              name: "Flex",
-              number: "90%",
+              id: this.USER_STRATEGIES[0].id,
+              total: this.USER_STRATEGIES[0].totalInvestment,
+              name: this.USER_STRATEGIES[0].name,
+              number: `${this.USER_STRATEGIES[0].portfolioShare}%`,
               method: this.deposit,
             },
           };
@@ -121,9 +130,10 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.WITHDRAW,
             strategy: {
+              id: this.USER_STRATEGIES[0].id,
               total: "",
-              name: "Flex",
-              number: "$123,234.923",
+              name: this.USER_STRATEGIES[0].name,
+              number: `$${this.USER_STRATEGIES[0].totalInvestment}`,
               method: this.withdraw,
             },
           };
@@ -132,12 +142,24 @@ export default {
       this.isShowModal = true;
     },
 
-    deposit(value) {
-      console.log("deposit", value);
+    async deposit(value, id) {
+      if (+this.USER_STRATEGIES[0].totalInvestment === 0) {
+        console.log(`1. Total ${id} investment 0. Deposit: `, value);
+        await firstStrategyDeposit(id, value);
+      } else {
+        console.log(`2. Total investment ${this.USER_STRATEGIES[0].totalInvestment}. Deposit: `, value);
+        await strategyDeposit(id, value);
+      }
     },
 
-    withdraw(value) {
-      console.log("withdraw", value);
+    async withdraw(value, id) {
+      if (+this.USER_STRATEGIES[0].totalInvestment === +value) {
+        console.log(`1. Withdraw all ${id}. `, value);
+        await strategyAllWithdraw(id, value);
+      } else {
+        console.log(`2. Withdraw ${id}. `, value);
+        await strategyWithdraw(id, value);
+      }
     },
 
     closeModal() {
@@ -147,6 +169,12 @@ export default {
   },
   computed: {
     ...mapGetters(["USER_STRATEGIES"]),
+
+    allTotalInvestment: function() {
+      return this.USER_STRATEGIES.reduce((acc, red) => {
+        return acc + (+red.totalInvestment);
+      }, 0);
+    },
   },
   created() {
     this.GET_USER_STRATEGIES();

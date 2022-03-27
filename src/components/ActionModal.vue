@@ -17,6 +17,7 @@
         <button
           class="modal-small-btn"
           @click="modalActionBtnClickHandler(valueForAction)"
+          :disabled="!valueForAction"
         >
           {{ modalAction.type.action }}
         </button>
@@ -36,13 +37,15 @@
         <input
           type="number"
           class="modal-grid-input"
-          v-model="totalValueForAction"
+          v-model="valueForAction"
+          disabled
         />
       </div>
       <div class="modal-body-bottom">
         <button
           class="modal-btn"
-          @click="modalActionBtnClickHandler(totalValueForAction)"
+          @click="modalActionBtnClickHandler(valueForAction)"
+          :disabled="!valueForAction"
         >
           {{ modalAction.type.action }}
         </button>
@@ -84,8 +87,8 @@ export default {
       }
     },
 
-    modalActionBtnClickHandler(value, method) {
-      this.$emit("actionButtonMethod", value, method);
+    modalActionBtnClickHandler(value) {
+      this.$emit("actionButtonMethod", value, this.modalAction.strategy.id);
     },
   },
   mounted() {
@@ -183,5 +186,15 @@ export default {
 .modal-grid-input.small {
   height: 35px;
   padding: 5px 10px;
+}
+
+.modal-grid-input:disabled {
+  opacity: 0.5;
+}
+
+.modal-small-btn:disabled,
+.modal-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 </style>
