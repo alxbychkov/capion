@@ -70,6 +70,7 @@ export default {
     connectWalletHandle() {
       if (this.user === fakeUser.login && this.password === fakeUser.password) {
         this.GET_isAUTHORISED(true);
+        this.$router.push("/");
       } else {
         this.user = "";
         this.password = "";

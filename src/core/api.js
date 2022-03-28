@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const API_URL = 'http://49.12.97.161:3000';
+
 export async function getStrategy(id) {
     let strategy = {};
 
     try {
-        const response = await axios.get(`strategy/${id}`);   
+        const response = await axios.get(`${API_URL}/strategy/${id}`);   
         strategy = response.data;
     } catch (err) {
         console.error('Connection failded: ', err);
@@ -17,7 +19,7 @@ export async function getAllStrategies() {
     const strategies = [];
 
     try {
-        const response = await axios.get('strategy');
+        const response = await axios.get(`${API_URL}/strategy`);
         const flexStrategy = response.data[0];
         strategies.push(        {
             id: flexStrategy._id,
@@ -38,7 +40,7 @@ export async function getAllStrategies() {
 
 export async function deployStrategy(id) {
     try {
-        const response = await axios.post(`strategy/deployProxy/${id}`);
+        const response = await axios.post(`${API_URL}/strategy/deployProxy/${id}`);
         
         console.log(response.data);
         return response.data;
@@ -54,7 +56,7 @@ export async function firstStrategyDeposit(id, amount) {
             "amount": +amount,
             "debug": true
         };
-        const response = await axios.post(`strategy/deposit/${id}`, data, {
+        const response = await axios.post(`${API_URL}/strategy/deposit/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -74,7 +76,7 @@ export async function strategyDeposit(id, amount) {
         const data = {
             "amount": amount.toString()
         };
-        const response = await axios.post(`strategy/increase-position/${id}`, data, {
+        const response = await axios.post(`${API_URL}/strategy/increase-position/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -95,7 +97,7 @@ export async function strategyAllWithdraw(id, amount) {
             "swapToUSDC": true,
             "transferToAddress": true
         };
-        const response = await axios.post(`strategy/withdraw/${id}`, data, {
+        const response = await axios.post(`${API_URL}/strategy/withdraw/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -117,7 +119,7 @@ export async function strategyWithdraw(id, amount) {
             "swapToUSDC": true,
             "transferToAddress": {}
         };
-        const response = await axios.post(`strategy/decrease-position/${id}`, data, {
+        const response = await axios.post(`${API_URL}/strategy/decrease-position/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'

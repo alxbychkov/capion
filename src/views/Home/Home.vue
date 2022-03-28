@@ -1,20 +1,14 @@
 <template>
-  <no-login-form v-if="!isAUTHORISED" />
-  <portfolio v-else />
+  <portfolio />
 </template>
 <script>
-import { mapGetters } from "vuex";
 import Portfolio from "../../components/Portfolio.vue";
-import NoLoginForm from "../../components/NoLoginForm.vue";
 
 export default {
   name: "Home",
-  components: { Portfolio, NoLoginForm },
+  components: { Portfolio },
   data() {
     return {};
-  },
-  computed: {
-    ...mapGetters(["isAUTHORISED"]),
   },
 };
 </script>
