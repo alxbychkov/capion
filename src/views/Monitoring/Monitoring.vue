@@ -4,7 +4,13 @@
       <div class="section__title">{{ strategy.name }}</div>
       <div class="strategy-actions">
         <button class="st-actions-btn yellow">Pause</button>
-        <button class="st-actions-btn red">Emergen withdraw</button>
+        <button
+          class="st-actions-btn red"
+          :disabled="this.USER_STRATEGIES[0].totalInvestment === 0"
+          @click="actionBtnClickHandler('withdraw')"
+        >
+          Emergent withdraw
+        </button>
       </div>
     </div>
     <div class="strategy-info">
@@ -40,19 +46,25 @@
         </ul>
       </div>
     </div>
-    <button class="rebalance-btn">Rebalance share</button>
+    <button class="rebalance-btn" @click="actionBtnClickHandler('rebalance')">
+      Rebalance share
+    </button>
     <div class="strategy-assets">
       <div class="asset-row">
         <div class="asset-row__name">APY</div>
-        <div class="asset-row__number">20.234%</div>
+        <div class="asset-row__number">{{ this.USER_STRATEGIES[0].apy }}%</div>
       </div>
       <div class="asset-row double-row">
         <div class="asset-row__name">Risk Factor</div>
-        <div class="asset-row__number">1/5</div>
+        <div class="asset-row__number">
+          {{ this.USER_STRATEGIES[0].risk_factor }}
+        </div>
       </div>
       <div class="asset-row">
         <div class="asset-row__name">Total investments</div>
-        <div class="asset-row__number">$100,234,345.34</div>
+        <div class="asset-row__number">
+          ${{ this.USER_STRATEGIES[0].totalInvestment }}
+        </div>
       </div>
     </div>
     <div class="strategy-bottom">
@@ -70,20 +82,92 @@
         <span class="st-grid-span color-red align-end">$100.23</span>
       </div>
     </div>
+    <monitoring-modal
+      v-if="isShowModal"
+      :isShow="isShowModal"
+      :modalAction="modalAction"
+      @close="closeModal"
+      @actionButtonMethod="this.modalAction.strategy.method"
+    />
   </div>
 </template>
 <script>
-import { getStrategy } from "../../core/api.js";
+import {
+  getStrategy,
+  rebalanceShare,
+  strategyAllWithdraw,
+} from "../../core/api.js";
+import MonitoringModal from "../../components/MonitoringModal.vue";
+import { MODAL_TYPES } from "../../helpers/modalTypes";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Monitoring",
+  components: { MonitoringModal },
   data() {
     return {
       strategy: "",
+      isShowModal: false,
+      modalAction: "",
     };
+  },
+  computed: {
+    ...mapGetters(["USER_STRATEGIES"]),
+  },
+  methods: {
+    ...mapActions(["GET_USER_STRATEGIES"]),
+
+    actionBtnClickHandler(action) {
+      switch (action) {
+        case "rebalance":
+          this.modalAction = {
+            type: MODAL_TYPES.REBALANCE,
+            strategy: {
+              id: this.USER_STRATEGIES[0].id,
+              rows: [
+                { 0: "AAVE", 1: "50", 2: "aaveShare" },
+                { 0: "Uniswap v3", 1: "25", 2: "sushiShare" },
+                { 0: "Sushiswap", 1: "25", 2: "uniShare" },
+              ],
+              method: this.rebalance,
+            },
+          };
+          break;
+        case "withdraw":
+          this.modalAction = {
+            type: MODAL_TYPES.EMERGENT_WITHDRAW,
+            strategy: {
+              method: this.withdraw,
+            },
+          };
+      }
+
+      this.isShowModal = true;
+    },
+
+    async rebalance(values) {
+      console.log(
+        `Rebalance share ${values["aaveShare"]} ${values["sushiShare"]} ${values["uniShare"]}`
+      );
+      await rebalanceShare(this.$route.params.id, values);
+    },
+
+    async withdraw() {
+      console.log(`All withdraw ${this.USER_STRATEGIES[0].totalInvestment}`);
+      await strategyAllWithdraw(
+        this.$route.params.id,
+        this.USER_STRATEGIES[0].totalInvestment
+      );
+    },
+
+    closeModal() {
+      this.modalAction = "";
+      this.isShowModal = false;
+    },
   },
   created() {
     getStrategy(this.$route.params.id).then((res) => (this.strategy = res));
+    this.GET_USER_STRATEGIES();
   },
 };
 </script>
@@ -243,6 +327,11 @@ export default {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+.st-actions-btn:disabled {
+  cursor: default;
+  opacity: 0.5;
 }
 
 .st-actions-btn:not(:last-of-type) {

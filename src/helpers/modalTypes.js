@@ -12,5 +12,20 @@ export const MODAL_TYPES = {
         'header-2': 'General balance',
         'header-3': 'Withdraw sum',
         action: 'Withdraw'
+    },
+    REBALANCE: {
+        title: 'Rebalance shares',
+        'header-1': 'Assets',
+        'header-2': 'Curent share',
+        'header-3': 'New share (%)',
+        action: 'Rebalance'
+    },
+    EMERGENT_WITHDRAW: {
+        title: 'Emergent withdraw',
+        'header-1': '',
+        'header-2': '',
+        'header-3': '',
+        'text-1': 'Clicking “Withdraw” will remove all assets from the strategy completely!',
+        action: 'Withdraw'
     }
 }

@@ -142,3 +142,25 @@ export async function getChartData() {
     }
 }
 
+
+export async function rebalanceShare(id, values) {
+    if (!values.aaveShare || !values.sushiShare || !values.uniShare) return console.error('Not correct rebalance values.');
+    try {
+        const data = {
+            "aaveShare": +values.aaveShare,
+            "sushiShare": +values.sushiShare,
+            "uniShare": +values.uniShare
+        };
+        const response = await axios.post(`${API_URL}/strategy/rebalance/${id}`, data, {
+            headers: {
+                Accept: '*/*',
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log(response.data);
+        return response.data;
+    } catch(err) {
+        console.error('Rebalance share failed: ', err);
+    }
+}
