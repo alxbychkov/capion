@@ -8,14 +8,14 @@
         <div class="section__title">My portfolio</div>
       </div>
       <div class="graph-body">
-        <div 
-            v-for="strategy in USER_STRATEGIES"
-            :key="strategy.id"
-            class="portfolio-body__item border-shadow"
+        <div
+          v-for="strategy in USER_STRATEGIES"
+          :key="strategy.id"
+          class="portfolio-body__item border-shadow"
         >
           <p class="portfoli-body__title">{{ strategy.name }}</p>
           <div class="portfolio-body__graph">
-            <Chart/>
+            <Chart />
           </div>
           <div class="portfolio-body__bottom">
             <div class="portfolio-bottom-coll">
@@ -52,8 +52,12 @@
             :key="strategy.id"
           >
             <span class="grid-span">{{ strategy.name }}</span>
-            <span class="grid-span align-end">{{ strategy.portfolioShare }}%</span>
-            <span class="grid-span">{{ strategy.isActive ? 'Active' : 'Inactive' }}</span>
+            <span class="grid-span align-end"
+              >{{ strategy.portfolioShare }}%</span
+            >
+            <span class="grid-span">{{
+              strategy.isActive ? "Active" : "Inactive"
+            }}</span>
             <span class="grid-span">${{ strategy.totalInvestment }}</span>
             <span class="grid-span color-green">{{
               strategy.risk_factor
@@ -74,10 +78,16 @@
             Deposit
           </button>
           <button class="action-btn" disabled>Reinvest</button>
-          <button class="action-btn" @click="actionBtnClickHandler('withdraw')" :disabled="+USER_STRATEGIES[0].totalInvestment">
+          <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
             Withdraw money
           </button>
-          <button class="action-btn" disabled>Rebalance assets</button>
+          <button
+            class="action-btn"
+            @click="actionBtnClickHandler('rebalance')"
+            :disabled="+USER_STRATEGIES[0].totalInvestment"
+          >
+            Rebalance assets
+          </button>
         </div>
       </div>
     </div>
@@ -97,8 +107,14 @@
 import { mapGetters, mapActions } from "vuex";
 import ActionModal from "./ActionModal.vue";
 import { MODAL_TYPES } from "../helpers/modalTypes";
-import { firstStrategyDeposit, strategyAllWithdraw, strategyDeposit, strategyWithdraw } from '../core/api';
-import Chart from './elements/Chart.vue';
+import {
+  firstStrategyDeposit,
+  rebalanceShare,
+  strategyAllWithdraw,
+  strategyDeposit,
+  strategyWithdraw,
+} from "../core/api";
+import Chart from "./elements/Chart.vue";
 
 export default {
   name: "Portfolio",
@@ -122,6 +138,12 @@ export default {
               total: this.USER_STRATEGIES[0].totalInvestment,
               name: this.USER_STRATEGIES[0].name,
               number: `${this.USER_STRATEGIES[0].portfolioShare}%`,
+              rows: [
+                {
+                  0: this.USER_STRATEGIES[0].name,
+                  1: `${this.USER_STRATEGIES[0].portfolioShare}%`,
+                },
+              ],
               method: this.deposit,
             },
           };
@@ -134,9 +156,42 @@ export default {
               total: "",
               name: this.USER_STRATEGIES[0].name,
               number: `$${this.USER_STRATEGIES[0].totalInvestment}`,
+              rows: [
+                {
+                  0: this.USER_STRATEGIES[0].name,
+                  1: `$${this.USER_STRATEGIES[0].totalInvestment}`,
+                },
+              ],
               method: this.withdraw,
             },
           };
+          break;
+        case "rebalance":
+          this.modalAction = {
+            type: MODAL_TYPES.REBALANCE,
+            strategy: {
+              id: this.USER_STRATEGIES[0].id,
+              rows: [
+                {
+                  0: "AAVE",
+                  1: `${this.USER_STRATEGIES[0].config.split["aaveShare"]}%`,
+                  2: "aaveShare",
+                },
+                {
+                  0: "Uniswap v3",
+                  1: `${this.USER_STRATEGIES[0].config.split["sushiShare"]}%`,
+                  2: "sushiShare",
+                },
+                {
+                  0: "Sushiswap",
+                  1: `${this.USER_STRATEGIES[0].config.split["uniShare"]}%`,
+                  2: "uniShare",
+                },
+              ],
+              method: this.rebalance,
+            },
+          };
+          break;
       }
 
       this.isShowModal = true;
@@ -147,7 +202,10 @@ export default {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
         await firstStrategyDeposit(id, value);
       } else {
-        console.log(`2. Total investment ${this.USER_STRATEGIES[0].totalInvestment}. Deposit: `, value);
+        console.log(
+          `2. Total investment ${this.USER_STRATEGIES[0].totalInvestment}. Deposit: `,
+          value
+        );
         await strategyDeposit(id, value);
       }
     },
@@ -162,6 +220,13 @@ export default {
       }
     },
 
+    async rebalance(values) {
+      console.log(
+        `Rebalance share ${values["aaveShare"]} ${values["sushiShare"]} ${values["uniShare"]}`
+      );
+      await rebalanceShare(this.$route.params.id, values);
+    },
+
     closeModal() {
       this.modalAction = "";
       this.isShowModal = false;
@@ -170,9 +235,9 @@ export default {
   computed: {
     ...mapGetters(["USER_STRATEGIES"]),
 
-    allTotalInvestment: function() {
+    allTotalInvestment: function () {
       return this.USER_STRATEGIES.reduce((acc, red) => {
-        return acc + (+red.totalInvestment);
+        return acc + +red.totalInvestment;
       }, 0);
     },
   },

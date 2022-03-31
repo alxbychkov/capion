@@ -29,7 +29,8 @@ export async function getAllStrategies() {
             apy: '1.23',
             type: 'Cascade',
             totalInvestment: 0,
-            portfolioShare: '100'
+            portfolioShare: '100',
+            config: flexStrategy.config
         });
     } catch(err) {
         console.error('Connection failded: ', err);

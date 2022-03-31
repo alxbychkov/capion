@@ -4,11 +4,18 @@
       <a :href="href" class="project-logo" @click="navigate"><ProjectLogo /></a>
     </router-link>
     <div class="header-login">
-      <a href="#" class="user-info" v-if="isAUTHORISED">
-        <p class="user-name">Admin</p>
-        <p class="user-address">wef2sdsada24f3ds</p>
+      <a
+        v-if="isAUTHORISED && USER_ACCOUNT"
+        href="#"
+        class="user-info"
+        :title="USER_ACCOUNT"
+      >
+        <p class="user-name">Account:</p>
+        <p v-if="USER_ACCOUNT" class="user-address">
+          {{ USER_ACCOUNT }}
+        </p>
       </a>
-      <a href="#" v-else class="contact-us-btn">Contact us</a>
+      <a href="#" v-if="!isAUTHORISED" class="contact-us-btn">Contact us</a>
       <a href="#" class="login-icon"><LoginIcon /></a>
     </div>
   </header>
@@ -22,7 +29,7 @@ export default {
   name: "Header",
   components: { ProjectLogo, LoginIcon },
   computed: {
-    ...mapGetters(["isAUTHORISED"]),
+    ...mapGetters(["isAUTHORISED", "USER_ACCOUNT"]),
   },
   mounted() {},
 };
@@ -46,6 +53,7 @@ export default {
   padding: 5px 14px;
   border: 1px solid #fff;
   color: #fff;
+  max-width: 150px;
 }
 
 .user-name {
@@ -58,6 +66,8 @@ export default {
   font-weight: 400;
   font-size: 10px;
   line-height: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .login-icon {

@@ -125,9 +125,21 @@ export default {
             strategy: {
               id: this.USER_STRATEGIES[0].id,
               rows: [
-                { 0: "AAVE", 1: "50", 2: "aaveShare" },
-                { 0: "Uniswap v3", 1: "25", 2: "sushiShare" },
-                { 0: "Sushiswap", 1: "25", 2: "uniShare" },
+                {
+                  0: "AAVE",
+                  1: this.USER_STRATEGIES[0].config.split["aaveShare"],
+                  2: "aaveShare",
+                },
+                {
+                  0: "Uniswap v3",
+                  1: this.USER_STRATEGIES[0].config.split["sushiShare"],
+                  2: "sushiShare",
+                },
+                {
+                  0: "Sushiswap",
+                  1: this.USER_STRATEGIES[0].config.split["uniShare"],
+                  2: "uniShare",
+                },
               ],
               method: this.rebalance,
             },

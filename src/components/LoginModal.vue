@@ -5,20 +5,23 @@
       <p class="modal-title">Choose wallet</p>
       <div class="login-form">
         <p class="error-msg" v-if="error">{{ error }}</p>
-        <input
-          type="text"
-          class="modal-login-input"
-          placeholder="User"
-          v-model="user"
-          @input="error = ''"
-        />
-        <input
-          type="password"
-          class="modal-login-input"
-          placeholder="Password"
-          v-model="password"
-          @input="error = ''"
-        />
+        <div class="login-form-grid">
+          <div
+            v-for="method in methods"
+            :key="method.alt"
+            class="modal-login-method"
+            :class="{
+              disabled: !method.enabled,
+              active: activeMethod === method.alt,
+            }"
+            :data-method="method.alt"
+            @click="methodClickHandle(method)"
+          >
+            <img :src="method.img" :alt="method.alt" />
+            <span>{{ method.name }}</span>
+          </div>
+        </div>
+        <input type="text" class="modal-login-input" />
         <button class="connect-btn" @click="connectWalletHandle">
           Connect wallet
         </button>
@@ -28,11 +31,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-
-const fakeUser = {
-  login: "admin",
-  password: "admin",
-};
+import { accountPromise, connectMetamask } from "../core/metamask";
 
 export default {
   name: "LoginModal",
@@ -49,10 +48,43 @@ export default {
       user: "",
       password: "",
       error: "",
+      activeMethod: "",
+      methods: [
+        {
+          name: "MetaMask",
+          img: require("../assets/images/metamask.png"),
+          alt: "metamask",
+          enabled: true,
+        },
+        {
+          name: "CoinBase",
+          img: require("../assets/images/coinbase.png"),
+          alt: "coinbase",
+          enabled: false,
+        },
+        {
+          name: "Trust",
+          img: require("../assets/images/trust.png"),
+          alt: "trust",
+          enabled: false,
+        },
+        {
+          name: "Portis",
+          img: require("../assets/images/portis.png"),
+          alt: "portis",
+          enabled: false,
+        },
+        {
+          name: "FortMatic",
+          img: require("../assets/images/fortmatic.png"),
+          alt: "fortmatic",
+          enabled: false,
+        },
+      ],
     };
   },
   methods: {
-    ...mapActions(["GET_isAUTHORISED"]),
+    ...mapActions(["GET_isAUTHORISED", "GET_USER_ACCOUNT"]),
 
     close() {
       this.user = "";
@@ -67,19 +99,33 @@ export default {
       }
     },
 
-    connectWalletHandle() {
-      if (this.user === fakeUser.login && this.password === fakeUser.password) {
-        this.GET_isAUTHORISED(true);
-        this.$router.push("/");
-      } else {
-        this.user = "";
-        this.password = "";
-        this.error = "Invalid login or password";
+    async connectWalletHandle() {
+      try {
+        await connectMetamask();
+        await accountPromise.then((account) => {
+          this.GET_isAUTHORISED(true);
+          this.GET_USER_ACCOUNT(account);
+          this.$router.push("/");
+        });
+      } catch (e) {
+        this.error = e;
+        this.GET_isAUTHORISED(false);
+      }
+    },
+
+    methodClickHandle(value) {
+      if (value.enabled && this.activeMethod !== value.alt) {
+        this.activeMethod = value.alt;
+        this.error = "";
       }
     },
   },
   mounted() {
     document.addEventListener("keydown", this.keydownHandle);
+
+    if (this.methods.filter((m) => m.enabled).length === 1) {
+      this.activeMethod = this.methods.filter((m) => m.enabled)[0].alt;
+    }
   },
   beforeDestroy() {
     document.removeEventListener("keydown", this.keydownHandle);
@@ -107,6 +153,13 @@ export default {
   margin-bottom: 10px;
 }
 
+.login-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 32px;
+}
+
+.modal-login-method,
 .modal-login-input {
   background: #323030;
   box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
@@ -115,12 +168,40 @@ export default {
   border: none;
   outline: none;
   margin-bottom: 10px;
-  width: 330px;
+  width: 100%;
   height: 36px;
   color: #fff;
   font-weight: 400;
   font-size: 15px;
   line-height: 18px;
+}
+
+.login-form-grid .modal-login-input {
+  max-width: 150px;
+}
+
+.modal-login-method {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 150px;
+  position: relative;
+  cursor: pointer;
+  padding: 0 10px;
+  user-select: none;
+}
+
+.modal-login-method.active {
+  box-shadow: 0px 0px 10px #92df95;
+}
+
+.modal-login-method.disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.modal-login-method span {
+  margin-left: 10px;
 }
 
 .error-msg {

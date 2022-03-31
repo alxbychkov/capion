@@ -1,9 +1,9 @@
 export const MODAL_TYPES = {
     DEPOSIT: {
-        title: 'Balanced Addition',
+        title: 'Balanced Deposit',
         'header-1': 'Assets',
         'header-2': 'Portfolio share',
-        'header-3': 'Sum addition',
+        'header-3': 'Deposit',
         action: 'Add'
     },
     WITHDRAW: {

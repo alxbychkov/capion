@@ -16,6 +16,7 @@ import "./index.css";
 import Footer from "./components/basic/Footer.vue";
 import Header from "./components/basic/Header.vue";
 import { mapGetters, mapActions } from "vuex";
+import { accountPromise } from "./core/metamask";
 
 export default {
   name: "App",
@@ -24,11 +25,23 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["GET_isAUTHORISED"]),
+    ...mapActions(["GET_isAUTHORISED", "GET_USER_ACCOUNT"]),
+
+    async connect() {
+      try {
+        await accountPromise.then((account) => {
+          this.GET_USER_ACCOUNT(account);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
   computed: {
     ...mapGetters(["isAUTHORISED"]),
   },
-  created() {},
+  created() {
+    if (this.isAUTHORISED) this.connect();
+  },
 };
 </script>

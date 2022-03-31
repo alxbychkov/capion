@@ -40,7 +40,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
-// import { deployStrategy } from '../../core/api';
+import { deployStrategy } from "../../core/api";
 import router from "../../router";
 
 export default {
@@ -62,7 +62,7 @@ export default {
         if (btn.dataset.id === id.toString())
           this.$refs.addStrategyBtn[key].disabled = true;
       }
-      // await deployStrategy(id);
+      await deployStrategy(id);
       router.push("/");
     },
 

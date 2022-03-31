@@ -8,7 +8,10 @@
           {{ modalAction.strategy.total }}
         </p>
       </div>
-      <div class="modal-header small">
+      <div
+        v-if="modalAction.type.action !== 'Rebalance'"
+        class="modal-header small"
+      >
         <input
           type="number"
           class="modal-grid-input small"
@@ -23,7 +26,7 @@
         </button>
       </div>
       <div class="modal-grid">
-        <span class="modal-grid-header">{{
+        <!-- <span class="modal-grid-header">{{
           modalAction.type["header-1"]
         }}</span>
         <span class="modal-grid-header">{{
@@ -39,13 +42,54 @@
           class="modal-grid-input"
           v-model="valueForAction"
           disabled
-        />
+        /> -->
+        <div class="modal-grid-row">
+          <span class="modal-grid-header">{{
+            modalAction.type["header-1"]
+          }}</span>
+          <span class="modal-grid-header">{{
+            modalAction.type["header-2"]
+          }}</span>
+          <span class="modal-grid-header">{{
+            modalAction.type["header-3"]
+          }}</span>
+        </div>
+        <div
+          v-for="(row, index) in modalAction.strategy.rows"
+          class="modal-grid-row"
+          :key="index"
+        >
+          <span class="modal-grid-span">{{ row["0"] }}</span>
+          <span class="modal-grid-span">{{ row["1"] }}</span>
+          <input
+            v-if="modalAction.type.action !== 'Rebalance'"
+            type="number"
+            class="modal-grid-input"
+            disabled
+            v-model="valueForAction"
+          />
+          <input
+            v-else
+            type="number"
+            class="modal-grid-input"
+            v-model="rebalceValues[row['2']]"
+          />
+        </div>
       </div>
       <div class="modal-body-bottom">
         <button
+          v-if="modalAction.type.action !== 'Rebalance'"
           class="modal-btn"
           @click="modalActionBtnClickHandler(valueForAction)"
           :disabled="!valueForAction"
+        >
+          {{ modalAction.type.action }}
+        </button>
+        <button
+          v-else
+          class="modal-btn"
+          @click="modalActionBtnClickHandler(rebalceValues)"
+          :disabled="isBtnActive"
         >
           {{ modalAction.type.action }}
         </button>
@@ -74,7 +118,27 @@ export default {
     return {
       valueForAction: "",
       totalValueForAction: "",
+      rebalceValues: {
+        aaveShare: "",
+        sushiShare: "",
+        uniShare: "",
+      },
     };
+  },
+  computed: {
+    isBtnActive() {
+      let result = false;
+      if (this.modalAction.strategy.rows) {
+        result = true;
+        if (
+          this.rebalceValues.aaveShare &&
+          this.rebalceValues.sushiShare &&
+          this.rebalceValues.uniShare
+        )
+          result = false;
+      }
+      return result;
+    },
   },
   methods: {
     close() {
@@ -116,11 +180,18 @@ export default {
 }
 
 .modal-grid {
-  display: grid;
+  /* display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   row-gap: 28px;
-  column-gap: 50px;
+  column-gap: 50px;*/
   color: #fff;
+}
+
+.modal-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 50px;
+  margin-bottom: 28px;
 }
 
 .modal-grid-header {

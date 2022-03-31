@@ -8,7 +8,8 @@ const store = new Vuex.Store({
     state: {
         allStrategies: [],
         userStrategies: [],
-        isAuthorised: localStorage.getItem('isAuthorised') ? !!localStorage.getItem('isAuthorised') : false,
+        isAuthorised: localStorage.getItem('isMetamaskConnected') ? !!localStorage.getItem('isMetamaskConnected') : false,
+        userAccount: ''
     },
     mutations: {
         SET_isAUTHORISED(state, isAuthorised) {
@@ -19,11 +20,14 @@ const store = new Vuex.Store({
         },
         SET_ALL_STRATEGIES(state, strategies) {
             state.allStrategies = [...strategies];
-        }
+        },
+
+        SET_USER_ACCOUNT(state, account) {
+            state.userAccount = account;
+        },
     },
     actions: {
         GET_isAUTHORISED({commit}, isAuthorised) {
-            localStorage.setItem('isAuthorised', true);
             commit('SET_isAUTHORISED', isAuthorised);
         },
         GET_USER_STRATEGIES({commit}, strategy) {
@@ -44,7 +48,10 @@ const store = new Vuex.Store({
             const strategies = await getAllStrategies();
             commit('SET_ALL_STRATEGIES', strategies);
             return strategies;
-        }
+        },
+        GET_USER_ACCOUNT({commit}, account) {
+            commit('SET_USER_ACCOUNT', account);
+        },
     },
     getters: {
         isAUTHORISED(state) {
@@ -55,7 +62,10 @@ const store = new Vuex.Store({
         },
         ALL_STRATEGIES(state) {
             return state.allStrategies;
-        }
+        },
+        USER_ACCOUNT(state) {
+            return state.userAccount;
+        },
     }
 });
 

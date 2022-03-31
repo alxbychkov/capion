@@ -40,7 +40,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuth = localStorage.getItem('isAuthorised') ? localStorage.getItem('isAuthorised') : false;
+  const isAuth = localStorage.getItem('isMetamaskConnected') ? localStorage.getItem('isMetamaskConnected') : false;
   const requireAuth = to.matched.some(record => record.meta.auth);
 
   if (requireAuth && !isAuth) {
