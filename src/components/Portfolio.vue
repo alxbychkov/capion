@@ -77,7 +77,7 @@
           <button class="action-btn" @click="actionBtnClickHandler('deposit')">
             Deposit
           </button>
-          <button class="action-btn" disabled>Reinvest</button>
+          <button class="action-btn" @click="testEth">Reinvest</button>
           <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
             Withdraw money
           </button>
@@ -115,6 +115,8 @@ import {
   strategyWithdraw,
 } from "../core/api";
 import Chart from "./elements/Chart.vue";
+// eslint-disable-next-line no-unused-vars
+import { ethers } from "ethers";
 
 export default {
   name: "Portfolio",
@@ -230,6 +232,33 @@ export default {
     closeModal() {
       this.modalAction = "";
       this.isShowModal = false;
+    },
+
+    async testEth() {
+      const transactionParameters = {
+        // nonce: "0x00", // ignored by MetaMask
+        // gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
+        // gas: "", // customizable by user during MetaMask confirmation.
+        to: "0x003E569A4827B27bC853427a8a4C83b680f27d45", // Required except during contract publications.
+        from: "0x55e3160C3dF7d99763AF53628B1Ef753Fb6d056e", // must match user's active address.
+        // value: "0x00", // Only required to send ether to the recipient from the initiating external account.
+        data: "0x44882b95", // Optional, but used for defining smart contract creation and interaction.
+        // chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+      };
+
+      // window.ethereum
+      //   .request({
+      //     method: "eth_sendTransaction",
+      //     params: [transactionParameters],
+      //   })
+      //   .then((txHash) => console.log(txHash))
+      //   .catch((error) => console.error(error));
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      ethers.utils.getAddress("0x003E569A4827B27bC853427a8a4C83b680f27d45");
+      const tx = await signer.sendTransaction(transactionParameters);
+      console.log(tx);
     },
   },
   computed: {
