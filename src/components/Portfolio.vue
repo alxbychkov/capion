@@ -236,14 +236,14 @@ export default {
 
     async testEth() {
       const transactionParameters = {
-        // nonce: "0x00", // ignored by MetaMask
-        // gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
-        // gas: "", // customizable by user during MetaMask confirmation.
+        nonce: "0x00", // ignored by MetaMask
+        gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
+        gas: "", // customizable by user during MetaMask confirmation.
         to: "0x7ba0682BBBc7D31836967D99fCcCaFE53CecB316", // Required except during contract publications.
-        from: "0xdB741d050D220923ce05d661ddD0aB22B668503e", // must match user's active address.
-        // value: "0x00", // Only required to send ether to the recipient from the initiating external account.
+        from: this.USER_ACCOUNT, // must match user's active address.
+        value: "0x00", // Only required to send ether to the recipient from the initiating external account.
         data: "0x44882b95", // Optional, but used for defining smart contract creation and interaction.
-        // chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+        chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
       };
 
       // window.ethereum
@@ -256,13 +256,13 @@ export default {
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      ethers.utils.getAddress("0xdB741d050D220923ce05d661ddD0aB22B668503e");
+      ethers.utils.getAddress(this.USER_ACCOUNT);
       const tx = await signer.sendTransaction(transactionParameters);
       console.log(tx);
     },
   },
   computed: {
-    ...mapGetters(["USER_STRATEGIES"]),
+    ...mapGetters(["USER_STRATEGIES", "USER_ACCOUNT"]),
 
     allTotalInvestment: function () {
       return this.USER_STRATEGIES.reduce((acc, red) => {
