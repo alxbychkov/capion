@@ -77,7 +77,7 @@
           <button class="action-btn" @click="actionBtnClickHandler('deposit')">
             Deposit
           </button>
-          <button class="action-btn" @click="testEth">Reinvest</button>
+          <button class="action-btn" disabled>Reinvest</button>
           <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
             Withdraw money
           </button>
@@ -115,8 +115,8 @@ import {
   strategyWithdraw,
 } from "../core/api";
 import Chart from "./elements/Chart.vue";
-// eslint-disable-next-line no-unused-vars
-import { ethers } from "ethers";
+import { signOperation } from '../core/eth'; 
+
 
 export default {
   name: "Portfolio",
@@ -202,7 +202,9 @@ export default {
     async deposit(value, id) {
       if (+this.USER_STRATEGIES[0].totalInvestment === 0) {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
-        await firstStrategyDeposit(id, value);
+        const txRequest = await firstStrategyDeposit(id, value);
+        const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+        console.log(txResponse);
       } else {
         console.log(
           `2. Total investment ${this.USER_STRATEGIES[0].totalInvestment}. Deposit: `,
@@ -232,33 +234,6 @@ export default {
     closeModal() {
       this.modalAction = "";
       this.isShowModal = false;
-    },
-
-    async testEth() {
-      const transactionParameters = {
-        nonce: "0x00", // ignored by MetaMask
-        gasPrice: "0x09184e72a000", // customizable by user during MetaMask confirmation.
-        gas: "", // customizable by user during MetaMask confirmation.
-        to: "0x7ba0682BBBc7D31836967D99fCcCaFE53CecB316", // Required except during contract publications.
-        from: this.USER_ACCOUNT, // must match user's active address.
-        value: "0x00", // Only required to send ether to the recipient from the initiating external account.
-        data: "0x44882b95", // Optional, but used for defining smart contract creation and interaction.
-        chainId: "0x3", // Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
-      };
-
-      // window.ethereum
-      //   .request({
-      //     method: "eth_sendTransaction",
-      //     params: [transactionParameters],
-      //   })
-      //   .then((txHash) => console.log(txHash))
-      //   .catch((error) => console.error(error));
-
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      ethers.utils.getAddress(this.USER_ACCOUNT);
-      const tx = await signer.sendTransaction(transactionParameters);
-      console.log(tx);
     },
   },
   computed: {

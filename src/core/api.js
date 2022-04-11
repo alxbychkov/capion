@@ -50,6 +50,17 @@ export async function deployStrategy(id) {
     }
 }
 
+export async function putStrategy(id) {
+    try {
+        const response = await axios.put(`${API_URL}/strategy/${id}`);
+        
+        console.log(response.data);
+        return response.data;
+    } catch(err) {
+        console.error('putStrategy failed: ', err);
+    }
+}
+
 export async function firstStrategyDeposit(id, amount) {
     if (!amount || amount === 0) return console.error('Not correct amount value.');
     try {

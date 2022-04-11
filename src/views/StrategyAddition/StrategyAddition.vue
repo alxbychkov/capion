@@ -42,6 +42,7 @@
 import { mapGetters, mapActions } from "vuex";
 import { deployStrategy } from "../../core/api";
 import router from "../../router";
+import { signOperation } from '../../core/eth'; 
 
 export default {
   name: "StrategyAddition",
@@ -62,7 +63,11 @@ export default {
         if (btn.dataset.id === id.toString())
           this.$refs.addStrategyBtn[key].disabled = true;
       }
-      await deployStrategy(id);
+      const txRequest = await deployStrategy(id);
+      const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+
+      console.log(txResponse);
+
       router.push("/");
     },
 
@@ -71,7 +76,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["ALL_STRATEGIES", "USER_STRATEGIES"]),
+    ...mapGetters(["ALL_STRATEGIES", "USER_STRATEGIES", "USER_ACCOUNT"]),
   },
   created() {
     this.GET_USER_STRATEGIES().then((res) => {
