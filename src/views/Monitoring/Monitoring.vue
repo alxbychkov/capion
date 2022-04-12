@@ -6,7 +6,7 @@
         <button class="st-actions-btn yellow">Pause</button>
         <button
           class="st-actions-btn red"
-          :disabled="this.USER_STRATEGIES[0].totalInvestment === 0"
+          :disabled="ALL_STRATEGIES[0].totalInvestment === 0"
           @click="actionBtnClickHandler('withdraw')"
         >
           Emergent withdraw
@@ -52,18 +52,18 @@
     <div class="strategy-assets">
       <div class="asset-row">
         <div class="asset-row__name">APY</div>
-        <div class="asset-row__number">{{ this.USER_STRATEGIES[0].apy }}%</div>
+        <div class="asset-row__number">{{ ALL_STRATEGIES[0].apy }}%</div>
       </div>
       <div class="asset-row double-row">
         <div class="asset-row__name">Risk Factor</div>
         <div class="asset-row__number">
-          {{ this.USER_STRATEGIES[0].risk_factor }}
+          {{ ALL_STRATEGIES[0].risk_factor }}
         </div>
       </div>
       <div class="asset-row">
         <div class="asset-row__name">Total investments</div>
         <div class="asset-row__number">
-          ${{ this.USER_STRATEGIES[0].totalInvestment }}
+          ${{ ALL_STRATEGIES[0].totalInvestment }}
         </div>
       </div>
     </div>
@@ -112,10 +112,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["USER_STRATEGIES"]),
+    ...mapGetters(["USER_STRATEGIES", "ALL_STRATEGIES"]),
   },
   methods: {
-    ...mapActions(["GET_USER_STRATEGIES"]),
+    ...mapActions(["GET_USER_STRATEGIES", "GET_ALL_STRATEGIES"]),
 
     actionBtnClickHandler(action) {
       switch (action) {
@@ -123,7 +123,7 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.REBALANCE,
             strategy: {
-              id: this.USER_STRATEGIES[0].id,
+              id: this.USER_STRATEGIES[0]._id,
               rows: [
                 {
                   0: "AAVE",
@@ -180,6 +180,7 @@ export default {
   created() {
     getStrategy(this.$route.params.id).then((res) => (this.strategy = res));
     this.GET_USER_STRATEGIES();
+    this.GET_ALL_STRATEGIES();
   },
 };
 </script>

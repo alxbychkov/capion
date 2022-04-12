@@ -39,10 +39,17 @@
   </div>
 </template>
 <script>
+/* eslint-disable no-unused-vars */
 import { mapGetters, mapActions } from "vuex";
-import { deployStrategy } from "../../core/api";
+import {
+  createStrategy,
+  deployStrategy,
+  preTestSetup,
+  putStrategy,
+} from "../../core/api";
 import router from "../../router";
-import { signOperation } from '../../core/eth'; 
+import { signOperation } from "../../core/eth";
+import { STRATEGIES } from "../../core/config";
 
 export default {
   name: "StrategyAddition",
@@ -57,16 +64,33 @@ export default {
 
     async addStrategyHandler(id) {
       if (!id) return;
-      const userStrategy = this.allStrategies.find((s) => s.id === id);
-      this.GET_USER_STRATEGIES(userStrategy);
+      // const userStrategy = this.allStrategies.find((s) => s.id === id);
+
+      const newStrategy = await createStrategy(this.USER_ACCOUNT);
+
+      newStrategy.risk_factor = STRATEGIES[0].risk_factor;
+      newStrategy.apy = STRATEGIES[0].apy;
+      newStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
+      newStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
+
+      // await preTestSetup(newStrategy["_id"]);
+
+      this.GET_USER_STRATEGIES(newStrategy);
       for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
         if (btn.dataset.id === id.toString())
           this.$refs.addStrategyBtn[key].disabled = true;
       }
-      const txRequest = await deployStrategy(id);
-      const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
 
-      console.log(txResponse);
+      const txRequest = await deployStrategy(newStrategy["_id"]);
+
+      try {
+        const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+        console.log(txResponse);
+      } catch (e) {
+        console.log("Sign deploy strategy: ", e);
+      }
+
+      await putStrategy(newStrategy["_id"], this.USER_ACCOUNT);
 
       router.push("/");
     },

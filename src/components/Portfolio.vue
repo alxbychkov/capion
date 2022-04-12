@@ -64,7 +64,7 @@
             }}</span>
             <span class="grid-span">{{ strategy.apy }}%</span>
             <router-link
-              :to="{ name: 'Monitoring', params: { id: strategy.id } }"
+              :to="{ name: 'Monitoring', params: { id: strategy._id } }"
               custom
               v-slot="{ href, navigate }"
             >
@@ -115,8 +115,7 @@ import {
   strategyWithdraw,
 } from "../core/api";
 import Chart from "./elements/Chart.vue";
-import { signOperation } from '../core/eth'; 
-
+import { signOperation } from "../core/eth";
 
 export default {
   name: "Portfolio",
@@ -128,7 +127,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["GET_USER_STRATEGIES"]),
+    ...mapActions(["GET_USER_STRATEGIES", "GET_ALL_STRATEGIES"]),
 
     actionBtnClickHandler(action) {
       switch (action) {
@@ -136,7 +135,7 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.DEPOSIT,
             strategy: {
-              id: this.USER_STRATEGIES[0].id,
+              id: this.USER_STRATEGIES[0]._id,
               total: this.USER_STRATEGIES[0].totalInvestment,
               name: this.USER_STRATEGIES[0].name,
               number: `${this.USER_STRATEGIES[0].portfolioShare}%`,
@@ -154,7 +153,7 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.WITHDRAW,
             strategy: {
-              id: this.USER_STRATEGIES[0].id,
+              id: this.USER_STRATEGIES[0]._id,
               total: "",
               name: this.USER_STRATEGIES[0].name,
               number: `$${this.USER_STRATEGIES[0].totalInvestment}`,
@@ -172,7 +171,7 @@ export default {
           this.modalAction = {
             type: MODAL_TYPES.REBALANCE,
             strategy: {
-              id: this.USER_STRATEGIES[0].id,
+              id: this.USER_STRATEGIES[0]._id,
               rows: [
                 {
                   0: "AAVE",
@@ -202,15 +201,23 @@ export default {
     async deposit(value, id) {
       if (+this.USER_STRATEGIES[0].totalInvestment === 0) {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
-        const txRequest = await firstStrategyDeposit(id, value);
-        const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
-        console.log(txResponse);
+        try {
+          const txRequest = await firstStrategyDeposit(id, value);
+          const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+          console.log(txResponse);
+        } catch (e) {
+          console.log("First deposit error:", e);
+        }
       } else {
         console.log(
           `2. Total investment ${this.USER_STRATEGIES[0].totalInvestment}. Deposit: `,
           value
         );
-        await strategyDeposit(id, value);
+        try {
+          await strategyDeposit(id, value);
+        } catch (e) {
+          console.log("Deposit error:", e);
+        }
       }
     },
 
@@ -237,7 +244,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["USER_STRATEGIES", "USER_ACCOUNT"]),
+    ...mapGetters(["USER_STRATEGIES", "USER_ACCOUNT", "ALL_STRATEGIES"]),
 
     allTotalInvestment: function () {
       return this.USER_STRATEGIES.reduce((acc, red) => {
@@ -247,6 +254,7 @@ export default {
   },
   created() {
     this.GET_USER_STRATEGIES();
+    this.GET_ALL_STRATEGIES();
   },
   mounted() {},
 };
