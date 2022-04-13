@@ -106,6 +106,27 @@ export async function putStrategy(id, address) {
     }
 }
 
+export async function putOperation(id, tx) {
+    try {      
+        const data = {
+            "txStatus": tx.status,
+            "txHash": tx.hash
+        }
+
+        const response = await axios.put(`${API_URL}/strategy/${id}/operation/${tx.operationId}`, data, {
+            headers: {
+                Accept: '*/*',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('Put operation', response.data);
+        return response.data;
+    } catch(err) {
+        console.error('Put operation failed: ', err);
+    }
+}
+
 export async function firstStrategyDeposit(id, amount) {
     if (!amount || amount === 0) return console.error('Not correct amount value.');
     try {

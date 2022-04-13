@@ -6,5 +6,7 @@ export async function signOperation(txData, account) {
     ethers.utils.getAddress(account);
     const tx = await signer.sendTransaction(txData);
     console.log(tx);
-    return tx;
+    const txWait = await tx.wait();
+    return txWait;
 }
+

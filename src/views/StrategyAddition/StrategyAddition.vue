@@ -73,7 +73,7 @@ export default {
       newStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
       newStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
 
-      // await preTestSetup(newStrategy["_id"]);
+      await preTestSetup(newStrategy["_id"]);
 
       this.GET_USER_STRATEGIES(newStrategy);
       for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
