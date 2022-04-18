@@ -80,8 +80,14 @@ export async function deployStrategy(id) {
     try {
         const response = await axios.post(`${API_URL}/strategy/deployProxy/${id}`);
         
-        console.log(response.data);
-        return response.data;
+        const strategy = await getStrategy(id);
+        const strategyOperations = strategy.operations.find(o => o.action = 'deployProxy');
+        const operationId = strategyOperations._id;
+
+        return {
+            tx: {...response.data},
+            id: operationId
+        };
     } catch(err) {
         console.error('Deploy failed: ', err);
     }
@@ -106,14 +112,14 @@ export async function putStrategy(id, address) {
     }
 }
 
-export async function putOperation(id, tx) {
+export async function putOperation(id, tx, operationId) {
     try {      
         const data = {
             "txStatus": tx.status,
-            "txHash": tx.hash
+            "txHash": tx.transactionHash
         }
 
-        const response = await axios.put(`${API_URL}/strategy/${id}/operation/${tx.operationId}`, data, {
+        const response = await axios.put(`${API_URL}/strategy/${id}/operation/${operationId}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'

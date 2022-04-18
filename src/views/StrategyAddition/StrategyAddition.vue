@@ -15,7 +15,7 @@
         <div
           class="strategy-grid-row"
           v-for="strategy in allStrategies"
-          :key="strategy.id"
+          :key="strategy.name"
         >
           <span class="grid-span">{{ strategy.name }}</span>
           <span class="grid-span color-green">{{ strategy.risk_factor }}</span>
@@ -23,8 +23,8 @@
           <span class="grid-span">{{ strategy.type }}</span>
           <button
             class="grid-span add"
-            :disabled="isUserHaveStrategy(strategy.id)"
-            :data-id="strategy.id"
+            :disabled="isUserHaveStrategy(strategy.name)"
+            :data-id="strategy.name"
             ref="addStrategyBtn"
             @click="addStrategyHandler(strategy.id)"
           >
@@ -45,10 +45,11 @@ import {
   createStrategy,
   deployStrategy,
   preTestSetup,
+  putOperation,
   putStrategy,
 } from "../../core/api";
 import router from "../../router";
-import { signOperation } from "../../core/eth";
+import { sendDeployProxy, signOperation } from "../../core/eth";
 import { STRATEGIES } from "../../core/config";
 
 export default {
@@ -67,30 +68,42 @@ export default {
       // const userStrategy = this.allStrategies.find((s) => s.id === id);
 
       const newStrategy = await createStrategy(this.USER_ACCOUNT);
+      const newStrategyId = newStrategy["_id"];
 
-      newStrategy.risk_factor = STRATEGIES[0].risk_factor;
-      newStrategy.apy = STRATEGIES[0].apy;
-      newStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
-      newStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
+      await preTestSetup(newStrategyId);
 
-      // await preTestSetup(newStrategy["_id"]);
-
-      this.GET_USER_STRATEGIES(newStrategy);
       for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
         if (btn.dataset.id === id.toString())
           this.$refs.addStrategyBtn[key].disabled = true;
       }
 
-      const txRequest = await deployStrategy(newStrategy["_id"]);
+      const txRequest = await deployStrategy(newStrategyId);
 
       try {
-        const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+        console.log(txRequest.tx);
+        const txResponse = await sendDeployProxy(txRequest.tx);
         console.log(txResponse);
+
+        await putOperation(newStrategyId, txResponse.operation, txRequest.id);
+
+        if (txResponse.proxyAddress) {
+          const deployedStrategy = await putStrategy(
+            newStrategyId,
+            txResponse.proxyAddress
+          );
+          console.log(deployedStrategy);
+
+          deployedStrategy.risk_factor = STRATEGIES[0].risk_factor;
+          deployedStrategy.apy = STRATEGIES[0].apy;
+          deployedStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
+          deployedStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
+
+          this.GET_USER_STRATEGIES(deployedStrategy);
+          this.userStrategies.push(newStrategy.name);
+        }
       } catch (e) {
         console.log("Sign deploy strategy: ", e);
       }
-
-      // await putStrategy(newStrategy["_id"], this.USER_ACCOUNT);
 
       router.push("/");
     },
@@ -105,7 +118,7 @@ export default {
   created() {
     this.GET_USER_STRATEGIES().then((res) => {
       res.forEach((s) => {
-        this.userStrategies.push(s.id);
+        this.userStrategies.push(s.name);
       });
     });
     this.GET_ALL_STRATEGIES().then((res) => (this.allStrategies = [...res]));
