@@ -267,30 +267,6 @@ export default {
   margin: 20px 0 30px;
 }
 
-.portfolio {
-  margin-bottom: 35px;
-}
-
-.portfolio-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 15px 0;
-  color: #fff;
-}
-
-.portfolio-header__title {
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
-}
-
-.portfolio-header__total {
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 22px;
-}
-
 .graph-body {
   display: flex;
   flex-wrap: wrap;
@@ -332,26 +308,6 @@ export default {
   color: #92df95;
 }
 
-.button-link {
-  background: #6fc872;
-  box-shadow: 0px 0px 10px #6fc872;
-  border-radius: 15px;
-  color: #fff;
-  padding: 5px 40px;
-  font-weight: 400;
-  font-size: 20px;
-  line-height: 24px;
-  display: inline-block;
-}
-
-.portfolio-section {
-  padding-bottom: 30px;
-  min-height: 345px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .portfolio-section-bottom {
   display: flex;
   align-items: center;
@@ -377,13 +333,6 @@ export default {
 .action-btn:disabled {
   opacity: 0.3;
   cursor: default;
-}
-
-.portfolio-grid-row {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr 1fr 2fr 1.5fr 1fr 22px;
-  column-gap: 20px;
-  margin-bottom: 28px;
 }
 
 .settings::after {

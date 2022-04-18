@@ -44,6 +44,7 @@ import { mapGetters, mapActions } from "vuex";
 import {
   createStrategy,
   deployStrategy,
+  getStrategyProxyAddress,
   preTestSetup,
   putOperation,
   putStrategy,
@@ -65,7 +66,6 @@ export default {
 
     async addStrategyHandler(id) {
       if (!id) return;
-      // const userStrategy = this.allStrategies.find((s) => s.id === id);
 
       const newStrategy = await createStrategy(this.USER_ACCOUNT);
       const newStrategyId = newStrategy["_id"];
@@ -82,14 +82,16 @@ export default {
       try {
         console.log(txRequest.tx);
         const txResponse = await sendDeployProxy(txRequest.tx);
-        console.log(txResponse);
+        console.log('sendDeployProxy', txResponse);
 
-        await putOperation(newStrategyId, txResponse.operation, txRequest.id);
+        const proxyAddress = await getStrategyProxyAddress(newStrategyId);
 
-        if (txResponse.proxyAddress) {
+        await putOperation(newStrategyId, txResponse, txRequest.id);
+
+        if (proxyAddress) {
           const deployedStrategy = await putStrategy(
             newStrategyId,
-            txResponse.proxyAddress
+            proxyAddress
           );
           console.log(deployedStrategy);
 

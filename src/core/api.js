@@ -54,25 +54,6 @@ export async function getStrategy(id) {
 
 export async function getAllStrategies() {
     const strategies = [...STRATEGIES];
-
-    // try {
-    //     const response = await axios.get(`${API_URL}/strategy`);
-    //     const flexStrategy = response.data[0];
-    //     strategies.push(        {
-    //         id: flexStrategy._id,
-    //         name: flexStrategy.name,
-    //         isActive: flexStrategy.isActive,
-    //         risk_factor: '1/5',
-    //         apy: '1.23',
-    //         type: 'Cascade',
-    //         totalInvestment: 0,
-    //         portfolioShare: '100',
-    //         config: flexStrategy.config
-    //     });
-    // } catch(err) {
-    //     console.error('Connection failded: ', err);
-    // }
-
     return strategies;
 }
 
@@ -90,6 +71,15 @@ export async function deployStrategy(id) {
         };
     } catch(err) {
         console.error('Deploy failed: ', err);
+    }
+}
+
+export async function getStrategyProxyAddress(id) {
+    try {
+        const address = await axios.get(`${API_URL}/strategy/proxyAddress/${id}`);
+        return address
+    } catch(err) {
+        console.error('Can not get proxy address: ', err);
     }
 }
 

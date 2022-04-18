@@ -94,26 +94,14 @@ export async function sendDeployProxy(txData) {
     const txWait = await tx.wait();
 
     const response = {
-        operation: {
-            transactionHash: '',
-            status: 'sent'
-        },
-        proxyAddress: ''
+        transactionHash: '',
+        status: 'sent'
     };
 
-    console.log(tx);
+    console.log('sendDeployProxy', tx);
 
     if (txWait.logs.length) {
-        response.operation.transactionHash = txWait.logs[0].transactionHash;
-        // response.operation.status = txWait.status;
-
-        console.log(decodeLog(txWait.logs[0].data, txWait.logs[0].topics));
-
-
-        // if (txWait.logs[0].topics[1]) {
-        //     console.log(txWait.logs[0].topics);
-        //     response.proxyAddress = byte32toString(txWait.logs[0].topics[1]);
-        // }
+        response.transactionHash = txWait.logs[0].transactionHash;
     }
 
     return response;

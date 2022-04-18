@@ -28,6 +28,18 @@ const routes = [
     meta: {auth: true}
   },
   { 
+    path: '/about', 
+    name: 'About', 
+    component: () => import('../views/About/About.vue'),
+    meta: {auth: false}
+  },
+  { 
+    path: '/discover', 
+    name: 'Discover', 
+    component: () => import('../views/Discover/Discover.vue'),
+    meta: {auth: true}
+  },
+  { 
     path: '*', 
     name: 'NotFoundPage', 
     component: () => import('../views/404/404.vue'),
