@@ -63,7 +63,7 @@ export default {
   margin: 30px;
   padding: 23px 30px;
   max-height: 636px;
-  color: #fff;
+  color: var(--text-color);
 }
 .sidebar-header {
   display: flex;
@@ -116,7 +116,7 @@ export default {
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 13px;
 }
 </style>

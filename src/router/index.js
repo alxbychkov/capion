@@ -8,13 +8,19 @@ const routes = [
     path: '/', 
     name: 'Home', 
     component: () => import('../views/Home/Home.vue'),
-    meta: {auth: true, sidebar: true}
+    meta: {auth: true, sidebar: false}
   },
   { 
     path: '/login', 
     name: 'Login', 
     component: () => import('../views/Login/Login.vue'),
     meta: {auth: false, sidebar: false}
+  },
+  { 
+    path: '/portfolio', 
+    name: 'Portfolio', 
+    component: () => import('../views/Portfolio/Portfolio.vue'),
+    meta: {auth: true, sidebar: true}
   },
   { path: '/addition',
     name: 'StrategyAddition', 
@@ -44,6 +50,12 @@ const routes = [
     name: 'Settings', 
     component: () => import('../views/Settings/Settings.vue'),
     meta: {auth: true, sidebar: false}
+  },
+  { 
+    path: '/create', 
+    name: 'Create', 
+    component: () => import('../views/Create/Create.vue'),
+    meta: {auth: true, sidebar: true}
   },
   { 
     path: '*', 

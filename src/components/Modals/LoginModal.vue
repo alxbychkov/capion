@@ -31,7 +31,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { accountPromise, connectMetamask } from "../core/metamask";
+import { accountPromise, connectMetamask } from "../../core/metamask";
 
 export default {
   name: "LoginModal",
@@ -52,31 +52,31 @@ export default {
       methods: [
         {
           name: "MetaMask",
-          img: require("../assets/images/metamask.png"),
+          img: require("../../assets/images/metamask.png"),
           alt: "metamask",
           enabled: true,
         },
         {
           name: "CoinBase",
-          img: require("../assets/images/coinbase.png"),
+          img: require("../../assets/images/coinbase.png"),
           alt: "coinbase",
           enabled: false,
         },
         {
           name: "Trust",
-          img: require("../assets/images/trust.png"),
+          img: require("../../assets/images/trust.png"),
           alt: "trust",
           enabled: false,
         },
         {
           name: "Portis",
-          img: require("../assets/images/portis.png"),
+          img: require("../../assets/images/portis.png"),
           alt: "portis",
           enabled: false,
         },
         {
           name: "FortMatic",
-          img: require("../assets/images/fortmatic.png"),
+          img: require("../../assets/images/fortmatic.png"),
           alt: "fortmatic",
           enabled: false,
         },
@@ -105,7 +105,7 @@ export default {
         await accountPromise.then((account) => {
           this.GET_isAUTHORISED(true);
           this.GET_USER_ACCOUNT(account);
-          this.$router.push("/");
+          this.$router.push("/portfolio");
         });
       } catch (e) {
         this.error = e;

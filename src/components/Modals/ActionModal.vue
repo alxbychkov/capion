@@ -26,23 +26,6 @@
         </button>
       </div>
       <div class="modal-grid">
-        <!-- <span class="modal-grid-header">{{
-          modalAction.type["header-1"]
-        }}</span>
-        <span class="modal-grid-header">{{
-          modalAction.type["header-2"]
-        }}</span>
-        <span class="modal-grid-header">{{
-          modalAction.type["header-3"]
-        }}</span>
-        <span class="modal-grid-span">{{ modalAction.strategy.name }}</span>
-        <span class="modal-grid-span">{{ modalAction.strategy.number }}</span>
-        <input
-          type="number"
-          class="modal-grid-input"
-          v-model="valueForAction"
-          disabled
-        /> -->
         <div class="modal-grid-row">
           <span class="modal-grid-header">{{
             modalAction.type["header-1"]
@@ -165,14 +148,14 @@ export default {
 </script>
 <style scoped>
 .modal-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--green-color);
+  box-shadow: 0px 0px 10px var(--green-color);
   border-radius: 15px;
   padding: 10px 46px;
   font-weight: 600;
   font-size: 22px;
   line-height: 27px;
-  color: #fff;
+  color: var(--text-color);
   border: none;
   outline: none;
   margin-top: 50px;
@@ -180,11 +163,7 @@ export default {
 }
 
 .modal-grid {
-  /* display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  row-gap: 28px;
-  column-gap: 50px;*/
-  color: #fff;
+  color: var(--text-color);
 }
 
 .modal-grid-row {
@@ -207,11 +186,11 @@ export default {
 }
 
 .modal-grid-input {
-  background: #323030;
+  background: var(--background-color);
   box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--text-color);
   padding: 5px;
 }
 .modal-grid-input[type="number"]::-webkit-outer-spin-button,
@@ -240,13 +219,13 @@ export default {
 }
 
 .modal-small-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--green-color);
+  box-shadow: 0px 0px 10px var(--green-color);
   border-radius: 15px;
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
   padding: 7px 21px;
   outline: none;
   border: none;

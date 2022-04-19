@@ -1,3 +1,11 @@
+:root {
+  --green-color: #92df95;
+  --background-color: #323030;
+  --text-color: #fff;
+  --background-color-light: #E1E0DD;
+  --dark-shadow: rgba(255, 255, 255, 0.15);
+  --light-shadow:rgba(0, 0, 0, 0.15);
+}
 * {
   margin: 0;
   padding: 0;
@@ -10,8 +18,12 @@ body {
   font-style: normal;
 }
 
+body {
+  background-color: var(--background-color-light);
+}
+
 body.dark-theme {
-  background-color: #323030;
+  background-color: var(--background-color);
 }
 
 a {
@@ -41,12 +53,12 @@ a {
 }
 
 .border-shadow {
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
 }
 
 .section {
-  background: #323030;
+  background: var(--background-color);
   padding: 20px 60px 50px;
 }
 
@@ -54,7 +66,7 @@ a {
   font-weight: 700;
   font-size: 30px;
   line-height: 37px;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 10px;
 }
 
@@ -66,14 +78,14 @@ a {
   font-weight: 600;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .grid-span {
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .grid-header.align-end,
@@ -81,8 +93,9 @@ a {
   text-align: end;
 }
 
+.color-green ,
 .grid-span.color-green {
-  color: #92df95;
+  color: var(--green-color);
 }
 
 .modal-window {
@@ -113,8 +126,8 @@ a {
 
 .modal-body {
   padding: 30px 60px;
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   margin: auto;
   z-index: 11;
@@ -124,7 +137,7 @@ a {
   font-weight: 700;
   font-size: 30px;
   line-height: 37px;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 10px;
 }
 
@@ -142,7 +155,7 @@ a {
   align-items: center;
   justify-content: space-between;
   margin: 15px 0;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .portfolio-header__title {
@@ -176,7 +189,7 @@ a {
   background: #6fc872;
   box-shadow: 0px 0px 10px #6fc872;
   border-radius: 15px;
-  color: #fff;
+  color: var(--text-color);
   padding: 5px 40px;
   font-weight: 400;
   font-size: 20px;

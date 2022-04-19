@@ -2,7 +2,7 @@
   <no-login-form />
 </template>
 <script>
-import NoLoginForm from "../../components/NoLoginForm.vue";
+import NoLoginForm from "../../components/elements/NoLoginForm.vue";
 
 export default {
   name: "Login",

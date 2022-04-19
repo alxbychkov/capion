@@ -96,14 +96,14 @@ export default {
 
 .footer-description {
   margin-top: 20px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
 }
 
 .nav-links {
-  color: #fff;
+  color: var(--text-color);
 }
 
 .links-title {
@@ -122,7 +122,8 @@ export default {
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-color);
+  opacity: 0.6;
   margin-bottom: 5px;
 }
 

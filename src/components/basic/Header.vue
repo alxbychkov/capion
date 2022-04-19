@@ -15,19 +15,36 @@
           {{ USER_ACCOUNT }}
         </p>
       </a>
-      <a href="#" v-if="!isAUTHORISED" class="contact-us-btn">Contact us</a>
+      <a
+        href="#"
+        v-if="!isAUTHORISED"
+        class="contact-us-btn"
+        @click="isShowModal = true"
+        >Contact us</a
+      >
       <a href="#" class="login-icon"><LoginIcon /></a>
     </div>
+    <contact-us-modal
+      v-if="!isAUTHORISED"
+      :isShow="isShowModal"
+      @close="isShowModal = false"
+    />
   </header>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import ProjectLogo from "./Logo.vue";
 import LoginIcon from "./LoginIcon.vue";
+import ContactUsModal from "../Modals/ContactUsModal.vue";
 
 export default {
   name: "Header",
-  components: { ProjectLogo, LoginIcon },
+  components: { ProjectLogo, LoginIcon, ContactUsModal },
+  data() {
+    return {
+      isShowModal: false,
+    };
+  },
   computed: {
     ...mapGetters(["isAUTHORISED", "USER_ACCOUNT"]),
   },
@@ -51,8 +68,8 @@ export default {
 .user-info {
   text-align: center;
   padding: 5px 14px;
-  border: 1px solid #fff;
-  color: #fff;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
   max-width: 150px;
 }
 
@@ -75,14 +92,14 @@ export default {
 }
 
 .contact-us-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--green-color);
+  box-shadow: 0px 0px 10px var(--green-color);
   border-radius: 15px;
   padding: 12px 51px;
   font-weight: 700;
   font-size: 17px;
   line-height: 21px;
-  color: #fff;
+  color: var(--text-color);
   display: block;
 }
 </style>

@@ -82,7 +82,7 @@ export default {
       try {
         console.log(txRequest.tx);
         const txResponse = await sendDeployProxy(txRequest.tx);
-        console.log('sendDeployProxy', txResponse);
+        console.log("sendDeployProxy", txResponse);
 
         const proxyAddress = await getStrategyProxyAddress(newStrategyId);
 
@@ -107,7 +107,7 @@ export default {
         console.log("Sign deploy strategy: ", e);
       }
 
-      router.push("/");
+      router.push("/portfolio");
     },
 
     isUserHaveStrategy(id) {

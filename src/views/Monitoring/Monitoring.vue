@@ -97,7 +97,7 @@ import {
   rebalanceShare,
   strategyAllWithdraw,
 } from "../../core/api.js";
-import MonitoringModal from "../../components/MonitoringModal.vue";
+import MonitoringModal from "../../components/Modals/MonitoringModal.vue";
 import { MODAL_TYPES } from "../../helpers/modalTypes";
 import { mapGetters, mapActions } from "vuex";
 

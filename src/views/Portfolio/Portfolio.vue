@@ -106,17 +106,17 @@
 <script>
 /* eslint-disable no-unused-vars */
 import { mapGetters, mapActions } from "vuex";
-import ActionModal from "./ActionModal.vue";
-import { MODAL_TYPES } from "../helpers/modalTypes";
+import ActionModal from "../../components/Modals/ActionModal.vue";
+import { MODAL_TYPES } from "../../helpers/modalTypes";
 import {
   firstStrategyDeposit,
   rebalanceShare,
   strategyAllWithdraw,
   strategyDeposit,
   strategyWithdraw,
-} from "../core/api";
-import Chart from "./elements/Chart.vue";
-import { signOperation } from "../core/eth";
+} from "../../core/api";
+import Chart from "../../components/elements/Chart.vue";
+import { signOperation } from "../../core/eth";
 import { ethers } from "ethers";
 import Web3 from "web3";
 
