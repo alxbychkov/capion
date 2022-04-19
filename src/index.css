@@ -19,6 +19,10 @@ a {
   color: initial;
 }
 
+#app {
+  display: flex;
+}
+
 .wrapper {
   max-width: 1090px;
   margin: 0 auto;

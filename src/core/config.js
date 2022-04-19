@@ -3,6 +3,7 @@ export const FLEX_STRATEGY = {
     "isActive": true,
     "config": {
       "network": "localhost",
+      "gasPrice": "25000000000",
       "deposit": {
         "aaveCollateralFactor": 88,
         "aaveUtilizationFactor": 70,

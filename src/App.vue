@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Sidebar />
     <div class="wrapper">
       <Header />
       <main class="main" :class="!isAUTHORISED ? 'no-auth' : ''">
@@ -15,12 +16,13 @@
 import "./index.css";
 import Footer from "./components/basic/Footer.vue";
 import Header from "./components/basic/Header.vue";
+import Sidebar from "./components/basic/Sidebar.vue";
 import { mapGetters, mapActions } from "vuex";
 import { accountPromise } from "./core/metamask";
 
 export default {
   name: "App",
-  components: { Header, Footer },
+  components: { Header, Footer, Sidebar },
   data() {
     return {};
   },

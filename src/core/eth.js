@@ -94,15 +94,10 @@ export async function sendDeployProxy(txData) {
     const txWait = await tx.wait();
 
     const response = {
-        transactionHash: '',
+        transactionHash: tx.hash,
         status: 'sent'
     };
 
-    console.log('sendDeployProxy', tx);
-
-    if (txWait.logs.length) {
-        response.transactionHash = txWait.logs[0].transactionHash;
-    }
-
+    console.log('sendDeployProxy', txWait);
     return response;
 }
