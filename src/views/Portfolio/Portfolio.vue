@@ -77,7 +77,7 @@
           <button class="action-btn" @click="actionBtnClickHandler('deposit')">
             Deposit
           </button>
-          <button class="action-btn" disabled>Reinvest</button>
+          <button class="action-btn" @click="preTest">Reinvest</button>
           <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
             Withdraw money
           </button>
@@ -110,6 +110,7 @@ import ActionModal from "../../components/Modals/ActionModal.vue";
 import { MODAL_TYPES } from "../../helpers/modalTypes";
 import {
   firstStrategyDeposit,
+  preTestSetup,
   rebalanceShare,
   strategyAllWithdraw,
   strategyDeposit,
@@ -241,6 +242,10 @@ export default {
       await rebalanceShare(this.$route.params.id, values);
     },
 
+    async preTest() {
+      await preTestSetup(this.USER_STRATEGIES[0]._id);
+    },
+
     closeModal() {
       this.modalAction = "";
       this.isShowModal = false;
@@ -259,7 +264,9 @@ export default {
     this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
-  mounted() {},
+  mounted() {
+    console.log(this.USER_STRATEGIES[0]._id);
+  },
 };
 </script>
 <style scoped>

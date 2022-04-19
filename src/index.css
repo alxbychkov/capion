@@ -5,6 +5,7 @@
   --background-color-light: #E1E0DD;
   --dark-shadow: rgba(255, 255, 255, 0.15);
   --light-shadow:rgba(0, 0, 0, 0.15);
+  --borser-shadow-color: rgba(255, 255, 255, 0.15);
 }
 * {
   margin: 0;

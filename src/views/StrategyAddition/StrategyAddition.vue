@@ -88,10 +88,10 @@ export default {
 
         await putOperation(newStrategyId, txResponse, txRequest.id);
 
-        if (proxyAddress) {
+        if (proxyAddress.data) {
           const deployedStrategy = await putStrategy(
             newStrategyId,
-            proxyAddress
+            proxyAddress.data
           );
           console.log(deployedStrategy);
 
@@ -99,6 +99,8 @@ export default {
           deployedStrategy.apy = STRATEGIES[0].apy;
           deployedStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
           deployedStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
+
+          await preTestSetup(newStrategyId);
 
           this.GET_USER_STRATEGIES(deployedStrategy);
           this.userStrategies.push(newStrategy.name);
