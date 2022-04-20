@@ -136,8 +136,8 @@ export default {
 .login-form {
   display: flex;
   flex-direction: column;
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   padding: 20px 30px;
 }
@@ -161,8 +161,8 @@ export default {
 
 .modal-login-method,
 .modal-login-input {
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 10px;
   padding: 6px 10px;
   border: none;
@@ -170,7 +170,7 @@ export default {
   margin-bottom: 10px;
   width: 100%;
   height: 36px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 400;
   font-size: 15px;
   line-height: 18px;
@@ -205,7 +205,7 @@ export default {
 }
 
 .error-msg {
-  background: #323030;
+  background: var(--background-color);
   box-shadow: 0px 0px 10px rgb(161 1 1);
   border-radius: 10px;
   padding: 6px 10px;
@@ -218,8 +218,8 @@ export default {
 }
 
 .connect-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 10px;
   padding: 8px 94px;
   border: none;
@@ -227,7 +227,7 @@ export default {
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
   cursor: pointer;
 }
 </style>

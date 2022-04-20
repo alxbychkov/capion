@@ -32,15 +32,15 @@ export default {
 
 .no-login-row {
   margin: 20px 0 30px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 700;
   font-size: 30px;
   line-height: 37px;
 }
 
 .log-in-btn {
-  background: var(--green-color);
-  box-shadow: 0px 0px 10px var(--green-color);
+  background: var(--green-color-col);
+  box-shadow: 0px 0px 10px var(--green-color-col);
   border-radius: 15px;
   padding: 13px 67px;
   font-weight: 700;

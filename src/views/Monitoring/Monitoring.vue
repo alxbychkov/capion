@@ -202,7 +202,7 @@ export default {
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .strategy-info-item:first-child {
@@ -221,14 +221,14 @@ export default {
 }
 
 .rebalance-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--green-color-col);
+  box-shadow: 0px 0px 10px var(--green-color-col);
   border-radius: 15px;
   padding: 6px 46px;
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
-  color: #fff;
+  color: var(--text-color);
   border: none;
   outline: none;
   cursor: pointer;
@@ -250,8 +250,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
 }
 
@@ -268,11 +268,11 @@ export default {
   font-weight: 700;
   font-size: 25px;
   line-height: 30px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .asset-row__number {
-  color: #92df95;
+  color: var(--green-color-col);
 }
 
 .asset-row.double-row .asset-row__number {
@@ -282,12 +282,12 @@ export default {
 }
 
 .strategy-bottom {
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   padding: 24px 30px 100px;
   margin-top: 30px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .strategy-bottom-text {
@@ -316,11 +316,11 @@ export default {
 }
 
 .st-grid-span.color-green {
-  color: #92df95;
+  color: var(--green-color-col);
 }
 
 .st-grid-span.color-red {
-  color: #ff1414;
+  color: var(--red-color);
 }
 
 .strategy-actions {
@@ -336,7 +336,7 @@ export default {
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
-  color: #fff;
+  color: var(--text-color);
   border: none;
   outline: none;
   cursor: pointer;
@@ -352,13 +352,13 @@ export default {
 }
 
 .st-actions-btn.yellow {
-  background: #ecd401;
-  box-shadow: 0px 0px 10px #ecd401;
+  background: var(--yellow-color);
+  box-shadow: 0px 0px 10px var(--yellow-color);
 }
 
 .st-actions-btn.red {
-  background: #ff1414;
-  box-shadow: 0px 0px 10px #ff1414;
+  background: var(--red-color);
+  box-shadow: 0px 0px 10px var(--red-color);
 }
 
 .monitoring-section .section-header {

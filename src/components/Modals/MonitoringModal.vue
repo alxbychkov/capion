@@ -115,14 +115,14 @@ export default {
 </script>
 <style scoped>
 .modal-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 15px;
   padding: 10px 46px;
   font-weight: 600;
   font-size: 22px;
   line-height: 27px;
-  color: #fff;
+  color: var(--text-color);
   border: none;
   outline: none;
   margin-top: 50px;
@@ -132,19 +132,19 @@ export default {
 }
 
 .modal-btn.color-red {
-  background: #ff1414;
+  background: var(--red-color);
 }
 
 .modal-text {
   font-weight: 400;
   font-size: 16px;
   line-height: 20px;
-  color: #fff;
+  color: var(--text-color);
   margin-top: 50px;
 }
 
 .modal-grid {
-  color: #fff;
+  color: var(--text-color);
   margin-top: 30px;
 }
 
@@ -168,11 +168,11 @@ export default {
 }
 
 .modal-grid-input {
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--text-color);
   padding: 5px;
 }
 .modal-grid-input[type="number"]::-webkit-outer-spin-button,
@@ -201,13 +201,13 @@ export default {
 }
 
 .modal-small-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 15px;
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
   padding: 7px 21px;
   outline: none;
   border: none;

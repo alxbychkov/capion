@@ -50,8 +50,8 @@ export default {
 .send-form {
   display: flex;
   flex-direction: column;
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   padding: 20px 30px;
   max-width: 392px;
@@ -66,14 +66,14 @@ export default {
   font-size: 14px;
   line-height: 17px;
   text-align: center;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 25px;
   padding: 0 30px;
 }
 
 .modal-login-input {
-  background: #323030;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  background: var(--background-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 10px;
   padding: 6px 10px;
   border: none;
@@ -81,15 +81,15 @@ export default {
   margin-bottom: 10px;
   width: 100%;
   height: 36px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 400;
   font-size: 15px;
   line-height: 18px;
 }
 
 .send-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 10px;
   padding: 8px 94px;
   border: none;
@@ -97,7 +97,7 @@ export default {
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
   cursor: pointer;
 }
 </style>

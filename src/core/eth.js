@@ -6,7 +6,6 @@ const signer = provider.getSigner();
 
 export async function signOperation(txData) {
     const tx = await signer.sendTransaction(txData);
-    console.log(tx);
     const txWait = await tx.wait();
     console.log(txWait);
 
@@ -35,40 +34,36 @@ export async function sendDeployProxy(txData) {
 }
 
 export async function* prepareCoins(object) {
-    yield* convertEtherToWETH(object.convertEtherToWETH);
-    yield* approveWETHToUniswapV3Router(object.approveWETHToUniswapV3Router);
+    // yield* convertEtherToWETH(object.convertEtherToWETH);
+    // yield* approveWETHToUniswapV3Router(object.approveWETHToUniswapV3Router);
     yield* swapWETHToUSDC(object.swapWETHToUSDC);
     yield* sendUSDCToProxy(object);
 }
 
 async function* convertEtherToWETH(tx) {
-    tx.convertEtherToWETH.value = ethers.utils.hexlify(400);
+    tx.value = ethers.utils.hexlify(400);
     yield {message: 'Convert ether to WETH'};
-    const convertEtherToWETH = await signOperation(tx.convertEtherToWETH);
-    yield {message: 'Waiting for convertEtherToWETH transaction ', txHash: convertEtherToWETH.hash};
-    await convertEtherToWETH.wait();
+    const convertEtherToWETH = await signOperation(tx);
+    yield {message: `Waiting for convertEtherToWETH transaction txHash: ${convertEtherToWETH.hash}`};
 }
 
 async function* approveWETHToUniswapV3Router(tx) {
     yield {message: 'Approve WETH to UniswapV3 router'};
-    const approveWETHToUniswapV3Router = await signOperation(tx.approveWETHToUniswapV3Router);
-    yield {message: 'Waiting for approveWETHToUniswapV3Router transaction ', txHash: approveWETHToUniswapV3Router.hash};
-    await approveWETHToUniswapV3Router.wait();
+    const approveWETHToUniswapV3Router = await signOperation(tx);
+    yield {message: `Waiting for approveWETHToUniswapV3Router transaction txHash: ${approveWETHToUniswapV3Router.hash}`};
 }
 
 async function* swapWETHToUSDC(tx) {
     yield {message: 'Swap WETH to USDC'};
-    const swapWETHToUSDC = await signOperation(tx.swapWETHToUSDC);
-    yield {message: 'Waiting for swapWETHToUSDC transaction ', txHash: swapWETHToUSDC.hash};
-    await swapWETHToUSDC.wait();
+    const swapWETHToUSDC = await signOperation(tx);
+    yield {message: `Waiting for swapWETHToUSDC transaction txHash: ${swapWETHToUSDC.hash}`};
 }
 
 async function* sendUSDCToProxy(tx) {
     const sendUSDCToProxyTx = {from: tx.from, to: tx.to, data: tx.data};
     yield {message: 'Send USDC to proxy'};
     const sendUSDCToProxy = await signOperation(sendUSDCToProxyTx);
-    yield {message: 'Waiting for sendUSDCToProxy transaction ', txHash: sendUSDCToProxy.hash};
-    await sendUSDCToProxy.wait();
+    yield {message: `Waiting for sendUSDCToProxy transaction txHash: ${sendUSDCToProxy.hash}`};
 }
 
 

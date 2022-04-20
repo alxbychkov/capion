@@ -52,7 +52,7 @@ export default {
 .coming-form {
   display: flex;
   flex-direction: column;
-  background: #323030;
+  background: var(--background-color);
   padding: 30px 100px;
   max-width: 990px;
 }
@@ -65,7 +65,7 @@ export default {
   font-weight: 400;
   font-size: 25px;
   line-height: 30px;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 30px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   padding: 30px 40px;
@@ -73,8 +73,8 @@ export default {
 }
 
 .coming-btn {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 10px;
   padding: 8px 94px;
   border: none;
@@ -82,7 +82,7 @@ export default {
   font-weight: 700;
   font-size: 40px;
   line-height: 49px;
-  color: #fff;
+  color: var(--text-color);
   cursor: pointer;
 }
 .coming-header {

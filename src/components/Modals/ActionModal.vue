@@ -187,7 +187,7 @@ export default {
 
 .modal-grid-input {
   background: var(--background-color);
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border: none;
   outline: none;
   color: var(--text-color);

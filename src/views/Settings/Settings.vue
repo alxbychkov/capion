@@ -60,7 +60,7 @@ export default {
 <style scoped>
 .settings {
   padding: 30px 60px;
-  color: #fff;
+  color: var(--text-color);
   min-height: 500px;
   display: flex;
   flex-direction: column;
@@ -72,7 +72,7 @@ export default {
   margin-bottom: 20px;
 }
 .settings-input {
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   border: none;
   outline: none;
@@ -80,7 +80,7 @@ export default {
   width: 175px;
   height: 50px;
   padding: 10px 20px;
-  color: #fff;
+  color: var(--text-color);
   font-weight: 400;
   font-size: 15px;
   line-height: 18px;
@@ -93,15 +93,15 @@ export default {
 }
 .settings-btn {
   margin: auto 0 0 auto;
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--green-color-col);
+  box-shadow: 0px 0px 10px var(--green-color-col);
   border-radius: 15px;
   border: none;
   outline: none;
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  color: #fff;
+  color: var(--text-color);
   padding: 13px 62px;
   cursor: pointer;
 }
@@ -125,8 +125,8 @@ export default {
 .theme-input {
   width: 23px;
   height: 23px;
-  background: #323030;
-  border: 1px solid #fff;
+  background: var(--background-color);
+  border: 1px solid var(--text-color);
   border-radius: 100%;
   margin-right: 10px;
   position: relative;
@@ -136,7 +136,7 @@ export default {
   width: 17px;
   height: 17px;
   border-radius: 100%;
-  background: #fff;
+  background: var(--text-color);
   position: absolute;
   top: 50%;
   left: 50%;

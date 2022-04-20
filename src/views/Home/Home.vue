@@ -31,12 +31,22 @@
           <img
             src="../../assets/images/graph-1.png"
             alt="graph"
-            class="graph-1"
+            class="graph-1 dark"
+          />
+          <img
+            src="../../assets/images/graph-1_white.png"
+            alt="graph"
+            class="graph-1 light"
           />
           <img
             src="../../assets/images/graph-2.png"
             alt="graph"
-            class="graph-2"
+            class="graph-2 dark"
+          />
+          <img
+            src="../../assets/images/graph-2_white.png"
+            alt="graph"
+            class="graph-2 light"
           />
         </div>
       </div>
@@ -59,7 +69,7 @@ export default {
 </script>
 <style scoped>
 .intro-section {
-  color: #fff;
+  color: var(--text-color);
   margin-top: 160px;
 }
 .intro-body {
@@ -73,6 +83,9 @@ export default {
   font-weight: 700;
   font-size: 30px;
   line-height: 37px;
+}
+.intro-body-col.color-green {
+  color: var(--green-color-col);
 }
 .intro-top {
   display: flex;
@@ -100,14 +113,14 @@ export default {
   margin-bottom: 28px;
 }
 .intro-link {
-  background: #92df95;
+  background: var(--green-color-col);
   border-radius: 15px;
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;
-  color: #fff;
+  color: var(--text-color);
   padding: 12px 38px;
-  filter: drop-shadow(0px 0px 10px #92df95);
+  filter: drop-shadow(0px 0px 10px var(--green-color-col));
   margin-right: 30px;
 }
 .intro-socials,
@@ -126,6 +139,20 @@ export default {
   width: 35px;
   max-width: 100%;
   height: auto;
+}
+
+html:not(.dark-theme) .graph-1.dark,
+html:not(.dark-theme) .graph-2.dark {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+html.dark-theme .graph-1.light,
+html.dark-theme .graph-2.light {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
 }
 
 .graph-2 {

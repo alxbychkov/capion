@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="button-section">
-      <button class="big-btn">Construct strategy</button>
+      <button class="big-btn" @click="prepareCoins">Construct strategy</button>
     </div>
   </div>
 </template>
@@ -108,13 +108,14 @@ export default {
       this.GET_USER_STRATEGIES(deployedStrategy);
       this.userStrategies.push(newStrategy.name);
 
-      // await this.prepareCoins();
+      await this.prepareCoins();
 
       router.push("/portfolio");
     },
 
     async prepareCoins() {
       try {
+        console.log(this.USER_STRATEGIES[0].preTestSetup.convertEtherToWETH);
         const coins = prepareCoins(this.USER_STRATEGIES[0].preTestSetup);
 
         for await (let value of coins) {
@@ -180,8 +181,8 @@ export default {
 }
 
 .grid-span.add {
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 15px;
   text-align: center;
   padding: 2px 18px;
@@ -204,8 +205,8 @@ button.grid-span:disabled {
 .big-btn {
   width: 100%;
   max-width: 520px;
-  background: #92df95;
-  box-shadow: 0px 0px 10px #92df95;
+  background: var(--button-green-background);
+  box-shadow: 0px 0px 10px var(--button-green-background);
   border-radius: 15px;
   padding: 10px 50px;
   text-align: center;
@@ -217,7 +218,7 @@ button.grid-span:disabled {
   font-weight: 700;
   font-size: 25px;
   line-height: 30px;
-  color: #fff;
+  color: var(--text-color);
   cursor: pointer;
   margin-bottom: 50px;
 }
@@ -227,8 +228,8 @@ button.grid-span:disabled {
   font-weight: 600;
   font-size: 12px;
   line-height: 15px;
-  color: #fff;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  color: var(--text-color);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 50%;
   cursor: pointer;
   margin-left: 7px;

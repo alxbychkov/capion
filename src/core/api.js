@@ -25,14 +25,14 @@ export async function preTestSetup(id) {
         const data = {
             "amount": 500
         };
+
         const response = await axios.post(`${API_URL}/strategy/pre-test-setup/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
             }
         });
-        
-        console.log('pre-test-setup', response.data);
+    
         return response.data;
     } catch(err) {
         console.error('Pre test setup failed: ', err);
@@ -80,7 +80,7 @@ export async function getStrategyProxyAddress(id) {
         return address
     } catch(err) {
         console.error('Can not get proxy address: ', err);
-        return;
+        return false;
     }
 }
 
@@ -96,7 +96,6 @@ export async function putStrategy(id, address) {
             }
         });
 
-        console.log('Put strategy', response.data);
         return response.data;
     } catch(err) {
         console.error('putStrategy failed: ', err);
@@ -117,7 +116,6 @@ export async function putOperation(id, tx, operationId) {
             }
         });
 
-        console.log('Put operation', response.data);
         return response.data;
     } catch(err) {
         console.error('Put operation failed: ', err);

@@ -92,8 +92,8 @@ export default {
 }
 
 .contact-us-btn {
-  background: var(--green-color);
-  box-shadow: 0px 0px 10px var(--green-color);
+  background: var(--green-color-col);
+  box-shadow: 0px 0px 10px var(--green-color-col);
   border-radius: 15px;
   padding: 12px 51px;
   font-weight: 700;

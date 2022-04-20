@@ -1,5 +1,7 @@
 html {
   --green-color: #92df95;
+  --red-color: #FF1414;
+  --yellow-color: #FFEF5C;
   --green-color-col: #6FC872;
   --button-green-background: #92df95;
   --button-green-shadow: #92df95;
@@ -15,6 +17,8 @@ html {
 
 html.dark-theme {
   --green-color: #92df95;
+  --red-color: #FF1414;
+  --yellow-color: #ecd401;
   --green-color-col: #92df95;
   --button-green-background: #6FC872;
   --button-green-shadow: #6FC872;
