@@ -1,12 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { ethers } from "ethers";
-import Web3 from "web3";
 
-const web3 = new Web3(Web3.givenProvider);
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
-
-
 
 export async function signOperation(txData) {
     const tx = await signer.sendTransaction(txData);
@@ -16,88 +12,63 @@ export async function signOperation(txData) {
 
     const response = {
         transactionHash: '',
-        status: ''
+        status: 'sent'
     };
 
     if (txWait.logs.length) {
         response.transactionHash = txWait.logs[0].transactionHash;
-        response.status = txWait.status.toString();
     }
 
     return response;
 }
 
-function byte32toString(value) {
-    // return ethers.utils.parseBytes32String(value);
-    const valueLength = value.length;
-
-    if (value[0] !== 0 && value[1] !== 'x') {
-        console.log('Invalid address');
-        return '';
-    }
-    
-    if (valueLength === 42) {
-        return value;
-    }
-
-    if (valueLength > 42) {
-        return `0x${value.slice(valueLength - 40)}`;
-    }
-}
-
-function decodeLog(hexString, topics) {
-    const inputs = [
-        {
-            type: "address",
-            name: "owner"
-        },
-        {
-            type: "address",
-            name: "proxyAddress"
-        }
-    ];
-    return web3.eth.abi.decodeLog(inputs, hexString, topics)
-}
-
-function decodeInt(hexString, topics) {
-    const abi = [
-        // Constructor
-        "constructor(string symbol, string name)",
-      
-        // State mutating method
-        "function transferFrom(address from, address to, uint amount)",
-      
-        // State mutating method, which is payable
-        "function mint(uint amount) payable",
-      
-        // Constant method (i.e. "view" or "pure")
-        "function balanceOf(address owner) view returns (uint)",
-      
-        // An Event
-        "event Transfer(address indexed from, address indexed to, uint256 amount)",
-      
-        // A Custom Solidity Error
-        "error AccountLocked(address owner, uint256 balance)",
-      
-        // Examples with structured types
-        "function addUser(tuple(string name, address addr) user) returns (uint id)",
-        "function addUsers(tuple(string name, address addr)[] user) returns (uint[] id)",
-        "function getUser(uint id) view returns (tuple(string name, address addr) user)"
-      ];
-    const iface = new ethers.utils.Interface(abi);
-
-    return iface.decodeEventLog("Transfer", hexString, topics);
-}
-
 export async function sendDeployProxy(txData) {
     const tx = await signer.sendTransaction(txData);
-    const txWait = await tx.wait();
+    await tx.wait();
 
     const response = {
         transactionHash: tx.hash,
         status: 'sent'
     };
 
-    console.log('sendDeployProxy', txWait);
     return response;
 }
+
+export async function* prepareCoins(object) {
+    yield* convertEtherToWETH(object.convertEtherToWETH);
+    yield* approveWETHToUniswapV3Router(object.approveWETHToUniswapV3Router);
+    yield* swapWETHToUSDC(object.swapWETHToUSDC);
+    yield* sendUSDCToProxy(object);
+}
+
+async function* convertEtherToWETH(tx) {
+    tx.convertEtherToWETH.value = ethers.utils.hexlify(400);
+    yield {message: 'Convert ether to WETH'};
+    const convertEtherToWETH = await signOperation(tx.convertEtherToWETH);
+    yield {message: 'Waiting for convertEtherToWETH transaction ', txHash: convertEtherToWETH.hash};
+    await convertEtherToWETH.wait();
+}
+
+async function* approveWETHToUniswapV3Router(tx) {
+    yield {message: 'Approve WETH to UniswapV3 router'};
+    const approveWETHToUniswapV3Router = await signOperation(tx.approveWETHToUniswapV3Router);
+    yield {message: 'Waiting for approveWETHToUniswapV3Router transaction ', txHash: approveWETHToUniswapV3Router.hash};
+    await approveWETHToUniswapV3Router.wait();
+}
+
+async function* swapWETHToUSDC(tx) {
+    yield {message: 'Swap WETH to USDC'};
+    const swapWETHToUSDC = await signOperation(tx.swapWETHToUSDC);
+    yield {message: 'Waiting for swapWETHToUSDC transaction ', txHash: swapWETHToUSDC.hash};
+    await swapWETHToUSDC.wait();
+}
+
+async function* sendUSDCToProxy(tx) {
+    const sendUSDCToProxyTx = {from: tx.from, to: tx.to, data: tx.data};
+    yield {message: 'Send USDC to proxy'};
+    const sendUSDCToProxy = await signOperation(sendUSDCToProxyTx);
+    yield {message: 'Waiting for sendUSDCToProxy transaction ', txHash: sendUSDCToProxy.hash};
+    await sendUSDCToProxy.wait();
+}
+
+

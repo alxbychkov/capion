@@ -13,7 +13,7 @@
           :key="strategy.id"
           class="portfolio-body__item border-shadow"
         >
-          <p class="portfoli-body__title">{{ strategy.name }}</p>
+          <p class="portfolio-body__title">{{ strategy.name }}</p>
           <div class="portfolio-body__graph">
             <Chart />
           </div>
@@ -110,7 +110,6 @@ import ActionModal from "../../components/Modals/ActionModal.vue";
 import { MODAL_TYPES } from "../../helpers/modalTypes";
 import {
   firstStrategyDeposit,
-  preTestSetup,
   rebalanceShare,
   strategyAllWithdraw,
   strategyDeposit,
@@ -118,8 +117,6 @@ import {
 } from "../../core/api";
 import Chart from "../../components/elements/Chart.vue";
 import { signOperation } from "../../core/eth";
-import { ethers } from "ethers";
-import Web3 from "web3";
 
 export default {
   name: "Portfolio",
@@ -243,7 +240,7 @@ export default {
     },
 
     async preTest() {
-      await preTestSetup(this.USER_STRATEGIES[0]._id);
+      return;
     },
 
     closeModal() {
@@ -264,9 +261,7 @@ export default {
     this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
-  mounted() {
-    console.log(this.USER_STRATEGIES[0]._id);
-  },
+  mounted() {},
 };
 </script>
 <style scoped>
@@ -285,8 +280,8 @@ export default {
   padding: 12px 30px;
 }
 
-.portfoli-body__title {
-  color: #fff;
+.portfolio-body__title {
+  color: var(--text-color);
   font-weight: 700;
   font-size: 25px;
   line-height: 30px;
@@ -304,7 +299,7 @@ export default {
   font-weight: 700;
   font-size: 18px;
   line-height: 22px;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .coll__title {
@@ -312,7 +307,7 @@ export default {
 }
 
 .coll__price {
-  color: #92df95;
+  color: var(--green-color-col);
 }
 
 .portfolio-section-bottom {
@@ -323,17 +318,17 @@ export default {
 }
 
 .action-btn {
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   border-radius: 15px;
   padding: 8px 16px;
-  background: #323030;
+  background: var(--background-color);
   outline: none;
   border: none;
   min-width: 200px;
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
-  color: #fff;
+  color: var(--text-color);
   cursor: pointer;
 }
 
@@ -343,7 +338,7 @@ export default {
 }
 
 .settings::after {
-  content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjIiIHZpZXdCb3g9IjAgMCAyMiAyMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEuMTMyMDkgMTIuNjI5OEMwLjk1MjcxNSAxMS41NTA1IDAuOTUyNzE1IDEwLjQ0OSAxLjEzMjA5IDkuMzY5NzdDMi4yMzQwOSA5LjM5NTc3IDMuMjI0MDkgOC44Njc3NyAzLjYwOTA5IDcuOTM4NzdDMy45OTQwOSA3LjAwODc3IDMuNjY3MDkgNS45MzQ3NyAyLjg2OTA5IDUuMTc1NzdDMy41MDU1IDQuMjg1MDUgNC4yODQ2NSAzLjUwNTU3IDUuMTc1MDkgMi44Njg3N0M1LjkzNTA5IDMuNjY2NzcgNy4wMDkwOSAzLjk5Mzc3IDcuOTM5MDkgMy42MDg3N0M4Ljg2OTA5IDMuMjIzNzcgOS4zOTYwOSAyLjIzMjc3IDkuMzY5MDkgMS4xMzE3N0MxMC40NDkgMC45NTIxNzIgMTEuNTUxMiAwLjk1MjE3MiAxMi42MzExIDEuMTMxNzdDMTIuNjA0MSAyLjIzMzc3IDEzLjEzMjEgMy4yMjM3NyAxNC4wNjExIDMuNjA4NzdDMTQuOTkxMSAzLjk5Mzc3IDE2LjA2NTEgMy42NjY3NyAxNi44MjQxIDIuODY4NzdDMTcuNzE0OCAzLjUwNTE4IDE4LjQ5NDMgNC4yODQzMyAxOS4xMzExIDUuMTc0NzdDMTguMzMzMSA1LjkzNDc3IDE4LjAwNjEgNy4wMDg3NyAxOC4zOTExIDcuOTM4NzdDMTguNzc2MSA4Ljg2ODc3IDE5Ljc2NzEgOS4zOTU3NyAyMC44NjgxIDkuMzY4NzdDMjEuMDQ3NyAxMC40NDg3IDIxLjA0NzcgMTEuNTUwOCAyMC44NjgxIDEyLjYzMDhDMTkuNzY2MSAxMi42MDM4IDE4Ljc3NjEgMTMuMTMxOCAxOC4zOTExIDE0LjA2MDhDMTguMDA2MSAxNC45OTA4IDE4LjMzMzEgMTYuMDY0OCAxOS4xMzExIDE2LjgyMzhDMTguNDk0NyAxNy43MTQ1IDE3LjcxNTUgMTguNDk0IDE2LjgyNTEgMTkuMTMwOEMxNi4wNjUxIDE4LjMzMjggMTQuOTkxMSAxOC4wMDU4IDE0LjA2MTEgMTguMzkwOEMxMy4xMzExIDE4Ljc3NTggMTIuNjA0MSAxOS43NjY4IDEyLjYzMTEgMjAuODY3OEMxMS41NTEyIDIxLjA0NzQgMTAuNDQ5IDIxLjA0NzQgOS4zNjkwOSAyMC44Njc4QzkuMzk2MDkgMTkuNzY1OCA4Ljg2ODA5IDE4Ljc3NTggNy45MzkwOSAxOC4zOTA4QzcuMDA5MDkgMTguMDA1OCA1LjkzNTA5IDE4LjMzMjggNS4xNzYwOSAxOS4xMzA4QzQuMjg1MzggMTguNDk0NCAzLjUwNTg5IDE3LjcxNTIgMi44NjkwOSAxNi44MjQ4QzMuNjY3MDkgMTYuMDY0OCAzLjk5NDA5IDE0Ljk5MDggMy42MDkwOSAxNC4wNjA4QzMuMjI0MDkgMTMuMTMwOCAyLjIzMzA5IDEyLjYwMzggMS4xMzIwOSAxMi42MzA4VjEyLjYyOThaTTExLjAwMDEgMTMuOTk5OEMxMS43OTU3IDEzLjk5OTggMTIuNTU4OCAxMy42ODM3IDEzLjEyMTQgMTMuMTIxMUMxMy42ODQgMTIuNTU4NSAxNC4wMDAxIDExLjc5NTQgMTQuMDAwMSAxMC45OTk4QzE0LjAwMDEgMTAuMjA0MSAxMy42ODQgOS40NDEwNiAxMy4xMjE0IDguODc4NDVDMTIuNTU4OCA4LjMxNTg0IDExLjc5NTcgNy45OTk3NyAxMS4wMDAxIDcuOTk5NzdDMTAuMjA0NCA3Ljk5OTc3IDkuNDQxMzggOC4zMTU4NCA4Ljg3ODc3IDguODc4NDVDOC4zMTYxNiA5LjQ0MTA2IDguMDAwMDkgMTAuMjA0MSA4LjAwMDA5IDEwLjk5OThDOC4wMDAwOSAxMS43OTU0IDguMzE2MTYgMTIuNTU4NSA4Ljg3ODc3IDEzLjEyMTFDOS40NDEzOCAxMy42ODM3IDEwLjIwNDQgMTMuOTk5OCAxMS4wMDAxIDEzLjk5OThaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K);
+  content: var(--settings-icon-url);
   cursor: pointer;
 }
 </style>

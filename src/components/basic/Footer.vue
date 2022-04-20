@@ -77,7 +77,7 @@ export default {
 }
 
 .footer-wrapper {
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.15);
+  box-shadow: 0px 0px 10px var(--dark-shadow);
   padding: 30px 15px;
   display: flex;
   justify-content: space-between;

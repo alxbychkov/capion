@@ -1,11 +1,12 @@
 <template>
   <div v-if="isShowSidebar" class="sidebar border-shadow">
     <div class="sidebar-header">
-      <img
+      <!-- <img
         src="../../assets/images/dashboard.png"
         alt="dashboard"
         class="sidebar-icon"
-      />
+      /> -->
+      <div class="sidebar-icon"></div>
       <p class="sidebar-title">Dashboard</p>
     </div>
     <div class="sidebar-body">
@@ -72,6 +73,12 @@ export default {
 }
 .sidebar-icon {
   margin-right: 10px;
+  height: 26px;
+  width: 31px;
+  background-image: var(--sidebar-icon-url);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 .sidebar-title {
   font-weight: 700;
@@ -101,11 +108,11 @@ export default {
   font-weight: 300;
   font-size: 15px;
   line-height: 18px;
-  color: #00ff66;
+  color: var(--text-green-color);
 }
 .sidebar-grid-col.fill {
   padding: 4px 11px;
-  background: #3a945e;
+  background: var(--text-green-background);
 }
 .sidebar-nav {
   display: flex;

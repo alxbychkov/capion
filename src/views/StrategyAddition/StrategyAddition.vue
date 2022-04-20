@@ -26,7 +26,7 @@
             :disabled="isUserHaveStrategy(strategy.name)"
             :data-id="strategy.name"
             ref="addStrategyBtn"
-            @click="addStrategyHandler(strategy.id)"
+            @click="addStrategyHandler(strategy.name)"
           >
             Add
           </button>
@@ -50,7 +50,7 @@ import {
   putStrategy,
 } from "../../core/api";
 import router from "../../router";
-import { sendDeployProxy, signOperation } from "../../core/eth";
+import { prepareCoins, sendDeployProxy, signOperation } from "../../core/eth";
 import { STRATEGIES } from "../../core/config";
 
 export default {
@@ -67,53 +67,84 @@ export default {
     async addStrategyHandler(id) {
       if (!id) return;
 
+      console.info("Start to create strategy.");
+
       const newStrategy = await createStrategy(this.USER_ACCOUNT);
       const newStrategyId = newStrategy["_id"];
+      console.info(`Strategy created id : ${newStrategyId}.`);
+
+      this.deactivateAddButton(id);
 
       await preTestSetup(newStrategyId);
-
-      for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
-        if (btn.dataset.id === id.toString())
-          this.$refs.addStrategyBtn[key].disabled = true;
-      }
+      console.info("Added coins  to your Wallet.");
 
       const txRequest = await deployStrategy(newStrategyId);
+      console.info("Strategy deployed, ready to send transaction.");
 
-      try {
-        console.log(txRequest.tx);
-        const txResponse = await sendDeployProxy(txRequest.tx);
-        console.log("sendDeployProxy", txResponse);
+      const txResponse = await this.sendDeployProxyTransaction(txRequest.tx);
+      const proxyAddress = await getStrategyProxyAddress(newStrategyId);
+      console.info(`Transaction sent. Proxy address: ${proxyAddress}.`);
 
-        const proxyAddress = await getStrategyProxyAddress(newStrategyId);
+      await putOperation(newStrategyId, txResponse, txRequest.id);
+      console.info("Operation added.");
 
-        await putOperation(newStrategyId, txResponse, txRequest.id);
+      const deployedStrategy = await putStrategy(
+        newStrategyId,
+        proxyAddress.data
+      );
+      console.info("Updated strategy with proxy address.");
 
-        if (proxyAddress.data) {
-          const deployedStrategy = await putStrategy(
-            newStrategyId,
-            proxyAddress.data
-          );
-          console.log(deployedStrategy);
+      deployedStrategy.risk_factor = STRATEGIES[0].risk_factor;
+      deployedStrategy.apy = STRATEGIES[0].apy;
+      deployedStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
+      deployedStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
 
-          deployedStrategy.risk_factor = STRATEGIES[0].risk_factor;
-          deployedStrategy.apy = STRATEGIES[0].apy;
-          deployedStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
-          deployedStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
+      const preResponse = await preTestSetup(newStrategyId);
+      console.info(
+        "New strategy ready. Start to convert coins for other operations."
+      );
+      deployedStrategy.preTestSetup = preResponse;
 
-          await preTestSetup(newStrategyId);
+      this.GET_USER_STRATEGIES(deployedStrategy);
+      this.userStrategies.push(newStrategy.name);
 
-          this.GET_USER_STRATEGIES(deployedStrategy);
-          this.userStrategies.push(newStrategy.name);
-        }
-      } catch (e) {
-        console.log("Sign deploy strategy: ", e);
-      }
+      // await this.prepareCoins();
 
       router.push("/portfolio");
     },
 
+    async prepareCoins() {
+      try {
+        const coins = prepareCoins(this.USER_STRATEGIES[0].preTestSetup);
+
+        for await (let value of coins) {
+          console.log(value.message);
+        }
+      } catch (e) {
+        console.error(e);
+        return;
+      }
+    },
+
+    deactivateAddButton(id) {
+      for (const [key, btn] of [...this.$refs.addStrategyBtn].entries()) {
+        if (btn.dataset.id === id.toString())
+          this.$refs.addStrategyBtn[key].disabled = true;
+      }
+    },
+
     isUserHaveStrategy(id) {
       return this.userStrategies.includes(id);
+    },
+
+    async sendDeployProxyTransaction(tx) {
+      try {
+        const txResponse = await sendDeployProxy(tx);
+        return txResponse;
+      } catch (e) {
+        console.log("Problems with send transaction deployProxy: ", e);
+        return {};
+      }
     },
   },
   computed: {

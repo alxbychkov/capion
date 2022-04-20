@@ -23,7 +23,7 @@ export async function createStrategy(address) {
 export async function preTestSetup(id) {
     try {
         const data = {
-            "amount": 100
+            "amount": 500
         };
         const response = await axios.post(`${API_URL}/strategy/pre-test-setup/${id}`, data, {
             headers: {
@@ -80,6 +80,7 @@ export async function getStrategyProxyAddress(id) {
         return address
     } catch(err) {
         console.error('Can not get proxy address: ', err);
+        return;
     }
 }
 
