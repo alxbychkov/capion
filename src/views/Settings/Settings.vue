@@ -40,6 +40,14 @@ export default {
   methods: {
     changeThemeHandler(value) {
       this.currentTheme = value;
+      switch (value) {
+        case "dark":
+          document.documentElement.classList.add("dark-theme");
+          break;
+        case "light":
+          document.documentElement.classList.remove("dark-theme");
+          break;
+      }
     },
 
     getUserTheme() {

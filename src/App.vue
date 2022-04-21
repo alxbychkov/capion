@@ -44,6 +44,12 @@ export default {
   },
   created() {
     if (this.isAUTHORISED) this.connect();
+    if (
+      localStorage.getItem("theme") &&
+      localStorage.getItem("theme") === "light"
+    )
+      document.documentElement.classList.remove("dark-theme");
   },
+  mounted() {},
 };
 </script>

@@ -99,6 +99,7 @@ export async function putStrategy(id, address) {
         return response.data;
     } catch(err) {
         console.error('putStrategy failed: ', err);
+        return {};
     }
 }
 

@@ -44,6 +44,7 @@ import { mapGetters, mapActions } from "vuex";
 import {
   createStrategy,
   deployStrategy,
+  getStrategy,
   getStrategyProxyAddress,
   preTestSetup,
   putOperation,
@@ -83,14 +84,16 @@ export default {
 
       const txResponse = await this.sendDeployProxyTransaction(txRequest.tx);
       const proxyAddress = await getStrategyProxyAddress(newStrategyId);
-      console.info(`Transaction sent. Proxy address: ${proxyAddress}.`);
+      console.info(
+        `Transaction sent. Proxy address: ${proxyAddress.data.proxyAddress}.`
+      );
 
       await putOperation(newStrategyId, txResponse, txRequest.id);
       console.info("Operation added.");
 
       const deployedStrategy = await putStrategy(
         newStrategyId,
-        proxyAddress.data
+        proxyAddress.data.proxyAddress
       );
       console.info("Updated strategy with proxy address.");
 
@@ -115,7 +118,6 @@ export default {
 
     async prepareCoins() {
       try {
-        console.log(this.USER_STRATEGIES[0].preTestSetup.convertEtherToWETH);
         const coins = prepareCoins(this.USER_STRATEGIES[0].preTestSetup);
 
         for await (let value of coins) {
