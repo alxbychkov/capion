@@ -45,10 +45,12 @@ const store = new Vuex.Store({
                 }   
             } else if (typeof obj === 'object' && obj.account) {
                 const userStrategy = await getUserStrategy(obj.account);
-                userStrategy[0].risk_factor = STRATEGIES[0].risk_factor;
-                userStrategy[0].apy = STRATEGIES[0].apy;
-                userStrategy[0].totalInvestment = STRATEGIES[0].totalInvestment;
-                userStrategy[0].portfolioShare = STRATEGIES[0].portfolioShare;
+                if (userStrategy.length) {
+                    userStrategy[0].risk_factor = STRATEGIES[0].risk_factor;
+                    userStrategy[0].apy = STRATEGIES[0].apy;
+                    userStrategy[0].totalInvestment = STRATEGIES[0].totalInvestment;
+                    userStrategy[0].portfolioShare = STRATEGIES[0].portfolioShare;
+                }
                 commit('SET_USER_STRATEGIES', userStrategy);
             } else {
                 commit('SET_USER_STRATEGIES', strategies);

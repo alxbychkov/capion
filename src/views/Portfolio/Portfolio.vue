@@ -204,6 +204,7 @@ export default {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
         try {
           const txRequest = await firstStrategyDeposit(id, value);
+          console.log(txRequest);
           const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
           console.log(txResponse);
         } catch (e) {

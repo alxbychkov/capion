@@ -106,7 +106,7 @@ export default {
       localStorage.setItem("preTestSetup", JSON.stringify(preResponse));
 
       this.GET_USER_STRATEGIES({ strategy: deployedStrategy });
-      // this.userStrategies.push(newStrategy.name);
+      this.userStrategies.push(newStrategy.name);
 
       await this.prepareCoins();
 
