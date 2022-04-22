@@ -84,7 +84,11 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["GET_isAUTHORISED", "GET_USER_ACCOUNT"]),
+    ...mapActions([
+      "GET_isAUTHORISED",
+      "GET_USER_ACCOUNT",
+      "GET_USER_STRATEGIES",
+    ]),
 
     close() {
       this.user = "";
@@ -105,6 +109,7 @@ export default {
         await accountPromise.then((account) => {
           this.GET_isAUTHORISED(true);
           this.GET_USER_ACCOUNT(account);
+          this.GET_USER_STRATEGIES({ account });
           this.$router.push("/portfolio");
         });
       } catch (e) {

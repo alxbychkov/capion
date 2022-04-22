@@ -116,7 +116,7 @@ import {
   strategyWithdraw,
 } from "../../core/api";
 import Chart from "../../components/elements/Chart.vue";
-import { signOperation } from "../../core/eth";
+import { signDataWithWeb3, signOperation } from "../../core/eth";
 
 export default {
   name: "Portfolio",
@@ -258,7 +258,7 @@ export default {
     },
   },
   created() {
-    this.GET_USER_STRATEGIES();
+    // this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
   mounted() {},

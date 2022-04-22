@@ -52,6 +52,21 @@ export async function getStrategy(id) {
     return strategy;
 }
 
+export async function getUserStrategy(account) {
+    let strategies = [];
+
+    try {
+        const response = await axios.get(`${API_URL}/strategy`);   
+        const allStrategies = response.data;
+
+        strategies = allStrategies.filter(s => s.ownerAddress === account);
+    } catch (err) {
+        console.error('Connection failded: ', err);
+    }
+
+    return strategies;
+}
+
 export async function getAllStrategies() {
     const strategies = [...STRATEGIES];
     return strategies;

@@ -63,7 +63,7 @@ export default {
     ...mapGetters(["USER_STRATEGIES", "USER_ACCOUNT", "ALL_STRATEGIES"]),
   },
   created() {
-    this.GET_USER_STRATEGIES();
+    // this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
 };

@@ -23,7 +23,7 @@
           <span class="grid-span">{{ strategy.type }}</span>
           <button
             class="grid-span add"
-            :disabled="isUserHaveStrategy(strategy.name)"
+            :disabled="userStrategies.includes(strategy.name)"
             :data-id="strategy.name"
             ref="addStrategyBtn"
             @click="addStrategyHandler(strategy.name)"
@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       allStrategies: [],
-      userStrategies: [],
+      // userStrategies: [],
     };
   },
   methods: {
@@ -97,19 +97,16 @@ export default {
       );
       console.info("Updated strategy with proxy address.");
 
-      deployedStrategy.risk_factor = STRATEGIES[0].risk_factor;
-      deployedStrategy.apy = STRATEGIES[0].apy;
-      deployedStrategy.totalInvestment = STRATEGIES[0].totalInvestment;
-      deployedStrategy.portfolioShare = STRATEGIES[0].portfolioShare;
-
       const preResponse = await preTestSetup(newStrategyId);
       console.info(
         "New strategy ready. Start to convert coins for other operations."
       );
       deployedStrategy.preTestSetup = preResponse;
 
-      this.GET_USER_STRATEGIES(deployedStrategy);
-      this.userStrategies.push(newStrategy.name);
+      localStorage.setItem("preTestSetup", JSON.stringify(preResponse));
+
+      this.GET_USER_STRATEGIES({ strategy: deployedStrategy });
+      // this.userStrategies.push(newStrategy.name);
 
       await this.prepareCoins();
 
@@ -118,11 +115,19 @@ export default {
 
     async prepareCoins() {
       try {
-        const coins = prepareCoins(this.USER_STRATEGIES[0].preTestSetup);
+        const preTestSetup = this.USER_STRATEGIES[0].preTestSetup
+          ? this.USER_STRATEGIES[0].preTestSetup
+          : localStorage.getItem("preTestSetup")
+          ? JSON.parse(localStorage.getItem("preTestSetup"))
+          : {};
+
+        const coins = prepareCoins(preTestSetup);
 
         for await (let value of coins) {
           console.log(value.message);
         }
+
+        localStorage.removeItem("preTestSetup");
       } catch (e) {
         console.error(e);
         return;
@@ -152,13 +157,20 @@ export default {
   },
   computed: {
     ...mapGetters(["ALL_STRATEGIES", "USER_STRATEGIES", "USER_ACCOUNT"]),
+
+    userStrategies: function () {
+      return this.USER_STRATEGIES.map((a) => a.name);
+    },
   },
   created() {
-    this.GET_USER_STRATEGIES().then((res) => {
-      res.forEach((s) => {
-        this.userStrategies.push(s.name);
-      });
-    });
+    // this.GET_USER_STRATEGIES().then((res) => {
+    //   res.forEach((s) => {
+    //     this.userStrategies.push(s.name);
+    //   });
+    // });
+    // this.USER_STRATEGIES.forEach((s) => {
+    //   this.userStrategies.push(s.name);
+    // });
     this.GET_ALL_STRATEGIES().then((res) => (this.allStrategies = [...res]));
   },
   mounted() {},

@@ -115,7 +115,7 @@ export default {
     ...mapGetters(["USER_STRATEGIES", "ALL_STRATEGIES"]),
   },
   methods: {
-    ...mapActions(["GET_USER_STRATEGIES", "GET_ALL_STRATEGIES"]),
+    ...mapActions(["GET_ALL_STRATEGIES"]),
 
     actionBtnClickHandler(action) {
       switch (action) {
@@ -179,7 +179,6 @@ export default {
   },
   created() {
     getStrategy(this.$route.params.id).then((res) => (this.strategy = res));
-    this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
 };

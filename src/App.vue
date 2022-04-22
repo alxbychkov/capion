@@ -27,7 +27,11 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["GET_isAUTHORISED", "GET_USER_ACCOUNT"]),
+    ...mapActions([
+      "GET_isAUTHORISED",
+      "GET_USER_ACCOUNT",
+      "GET_USER_STRATEGIES",
+    ]),
 
     async connect() {
       try {
@@ -40,10 +44,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isAUTHORISED"]),
+    ...mapGetters(["isAUTHORISED", "USER_ACCOUNT"]),
   },
   created() {
-    if (this.isAUTHORISED) this.connect();
+    if (this.isAUTHORISED) {
+      this.connect().then(() =>
+        this.GET_USER_STRATEGIES({ account: this.USER_ACCOUNT })
+      );
+    }
     if (
       localStorage.getItem("theme") &&
       localStorage.getItem("theme") === "light"

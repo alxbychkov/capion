@@ -1,5 +1,18 @@
 /* eslint-disable no-unused-vars */
 import { ethers } from "ethers";
+import Web3 from 'web3';
+
+const web3 = new Web3(Web3.givenProvider);
+
+export async function signDataWithWeb3(account) {
+    const accountPromise = web3.eth.getAccounts;
+    const accounts = await accountPromise();
+
+    console.log(accounts[0]);
+    web3.eth.accounts.sign('Some text', account).then(data => console.log(data));
+
+}
+
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
