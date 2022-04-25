@@ -72,19 +72,21 @@
             </router-link>
           </div>
         </div>
-
         <div v-if="USER_STRATEGIES.length" class="portfolio-section-bottom">
           <button class="action-btn" @click="actionBtnClickHandler('deposit')">
             Deposit
           </button>
-          <button class="action-btn" @click="preTest">Reinvest</button>
-          <button class="action-btn" @click="actionBtnClickHandler('withdraw')">
+          <button class="action-btn" @click="preTest" disabled>Reinvest</button>
+          <button
+            class="action-btn"
+            @click="actionBtnClickHandler('withdraw')"
+            :disabled="+USER_STRATEGIES[0].totalInvestment"
+          >
             Withdraw money
           </button>
           <button
             class="action-btn"
             @click="actionBtnClickHandler('rebalance')"
-            :disabled="+USER_STRATEGIES[0].totalInvestment"
           >
             Rebalance assets
           </button>
@@ -110,6 +112,7 @@ import ActionModal from "../../components/Modals/ActionModal.vue";
 import { MODAL_TYPES } from "../../helpers/modalTypes";
 import {
   firstStrategyDeposit,
+  putOperation,
   rebalanceShare,
   strategyAllWithdraw,
   strategyDeposit,
@@ -203,10 +206,11 @@ export default {
       if (+this.USER_STRATEGIES[0].totalInvestment === 0) {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
         try {
-          const txRequest = await firstStrategyDeposit(id, value);
-          console.log(txRequest);
-          const txResponse = await signOperation(txRequest, this.USER_ACCOUNT);
+          const { tx, operationId } = await firstStrategyDeposit(id, value);
+          const txResponse = await signOperation(tx);
           console.log(txResponse);
+          await putOperation(id, txResponse, operationId);
+          await this.updateUserStrategiesData();
         } catch (e) {
           console.log("First deposit error:", e);
         }
@@ -216,7 +220,10 @@ export default {
           value
         );
         try {
-          await strategyDeposit(id, value);
+          const { tx, operationId } = await strategyDeposit(id, value);
+          const txResponse = await signOperation(tx);
+          console.log(txResponse);
+          await putOperation(id, txResponse, operationId);
         } catch (e) {
           console.log("Deposit error:", e);
         }
@@ -233,15 +240,23 @@ export default {
       }
     },
 
-    async rebalance(values) {
+    async rebalance(values, id) {
       console.log(
         `Rebalance share ${values["aaveShare"]} ${values["sushiShare"]} ${values["uniShare"]}`
       );
-      await rebalanceShare(this.$route.params.id, values);
+      const { tx, operationId } = await rebalanceShare(id, values);
+      console.log(tx, operationId);
+      // const txResponse = await signOperation(tx);
+      // console.log(txResponse);
     },
 
     async preTest() {
       return;
+    },
+
+    async updateUserStrategiesData() {
+      await this.GET_USER_STRATEGIES();
+      this.closeModal();
     },
 
     closeModal() {
@@ -259,7 +274,6 @@ export default {
     },
   },
   created() {
-    // this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
   mounted() {},

@@ -76,13 +76,11 @@ export async function deployStrategy(id) {
     try {
         const response = await axios.post(`${API_URL}/strategy/deployProxy/${id}`);
         
-        const strategy = await getStrategy(id);
-        const strategyOperations = strategy.operations.find(o => o.action = 'deployProxy');
-        const operationId = strategyOperations._id;
+        const operationId = await getOperationId(id, 'deployProxy');
 
         return {
             tx: {...response.data},
-            id: operationId
+            operationId: operationId
         };
     } catch(err) {
         console.error('Deploy failed: ', err);
@@ -150,9 +148,13 @@ export async function firstStrategyDeposit(id, amount) {
                 'Content-Type': 'application/json'
             }
         });
-        
-        console.log(response.data);
-        return response.data;
+
+        const operationId = await getOperationId(id, 'deposit');
+
+        return {
+            tx: {...response.data},
+            operationId: operationId
+        };
     } catch(err) {
         console.error('First deposit failed: ', err);
     }
@@ -171,8 +173,12 @@ export async function strategyDeposit(id, amount) {
             }
         });
         
-        console.log(response.data);
-        return response.data;
+        const operationId = await getOperationId(id, 'deposit');
+
+        return {
+            tx: {...response.data},
+            operationId: operationId
+        };
     } catch(err) {
         console.error('Deposit failed: ', err);
     }
@@ -246,9 +252,21 @@ export async function rebalanceShare(id, values) {
             }
         });
         
-        console.log(response.data);
-        return response.data;
+        const operationId = await getOperationId(id, 'rebalance');
+
+        return {
+            tx: {...response.data},
+            operationId: operationId
+        };
     } catch(err) {
         console.error('Rebalance share failed: ', err);
     }
+}
+
+
+async function getOperationId(id, operationName) {
+    const strategy = await getStrategy(id);
+    const strategyOperations = strategy.operations.find(o => (o.action === operationName && o.txStatus === 'pending'));
+
+    return strategyOperations._id;
 }

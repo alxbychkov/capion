@@ -32,7 +32,8 @@ const store = new Vuex.Store({
             commit('SET_isAUTHORISED', isAuthorised);
         },
         async GET_USER_STRATEGIES({commit}, obj) {
-            const strategies = localStorage.getItem('userStrategies') ? JSON.parse(localStorage.getItem('userStrategies')) : [];
+            // const strategies = localStorage.getItem('userStrategies') ? JSON.parse(localStorage.getItem('userStrategies')) : [];
+            const strategies = [];
             if (typeof obj === 'object' && obj.strategy) {
                 if (strategies.find(s => s.id === obj.strategy.id) === undefined) {
                     strategies.push(obj.strategy);
@@ -40,7 +41,7 @@ const store = new Vuex.Store({
                     strategies[0].apy = STRATEGIES[0].apy;
                     strategies[0].totalInvestment = STRATEGIES[0].totalInvestment;
                     strategies[0].portfolioShare = STRATEGIES[0].portfolioShare;
-                    localStorage.setItem('userStrategies', JSON.stringify(strategies));
+                    // localStorage.setItem('userStrategies', JSON.stringify(strategies));
                     commit('SET_USER_STRATEGIES', strategies);
                 }   
             } else if (typeof obj === 'object' && obj.account) {

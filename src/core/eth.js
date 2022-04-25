@@ -26,16 +26,12 @@ const signer = provider.getSigner();
 
 export async function signOperation(txData) {
     const tx = await signer.sendTransaction(txData);
-    const txWait = await tx.wait();
+    await tx.wait();
 
     const response = {
-        transactionHash: '',
+        transactionHash: tx.hash,
         status: 'sent'
     };
-
-    if (txWait.logs.length) {
-        response.transactionHash = txWait.logs[0].transactionHash;
-    }
 
     return response;
 }
@@ -63,7 +59,6 @@ export async function* prepareCoins(object) {
 }
 
 async function* convertEtherToWETH(tx) {
-    // tx.value = ethers.utils.hexlify(tx.value);
     const hexValue = ethers.BigNumber.from(tx.value)._hex;
     tx.value = hexValue;
     tx.nonce = ethers.utils.hexlify(1);
@@ -82,9 +77,7 @@ async function* approveWETHToUniswapV3Router(tx) {
 async function* swapWETHToUSDC(tx) {
     tx.nonce = ethers.utils.hexlify(3);
     yield {message: 'Swap WETH to USDC'};
-    console.log(tx);
     const swapWETHToUSDC = await signOperation(tx);
-    console.log(swapWETHToUSDC);
     yield {message: `Waiting for swapWETHToUSDC transaction txHash: ${swapWETHToUSDC.transactionHash}`};
 }
 
