@@ -173,7 +173,7 @@ export async function strategyDeposit(id, amount) {
             }
         });
         
-        const operationId = await getOperationId(id, 'deposit');
+        const operationId = await getOperationId(id, 'increasePosition');
 
         return {
             tx: {...response.data},
@@ -209,9 +209,9 @@ export async function strategyWithdraw(id, amount) {
     if (!amount || amount === 0) return console.error('Not correct amount value.');
     try {
         const data = {
-            "proportionBPS": amount,
+            "proportionBPS": +amount,
             "swapToUSDC": true,
-            "transferToAddress": {}
+            "transferToAddress": true
         };
         const response = await axios.post(`${API_URL}/strategy/decrease-position/${id}`, data, {
             headers: {
@@ -220,8 +220,12 @@ export async function strategyWithdraw(id, amount) {
             }
         });
         
-        console.log(response.data);
-        return response.data;
+        const operationId = await getOperationId(id, 'decreasePosition');
+
+        return {
+            tx: {...response.data},
+            operationId: operationId
+        };
     } catch(err) {
         console.error('Withdraw failed: ', err);
     }
@@ -266,7 +270,7 @@ export async function rebalanceShare(id, values) {
 
 async function getOperationId(id, operationName) {
     const strategy = await getStrategy(id);
-    const strategyOperations = strategy.operations.find(o => (o.action === operationName && o.txStatus === 'pending'));
+    const strategyOperations = strategy.operations.filter(o => (o.action === operationName && o.txStatus === 'pending'));
 
-    return strategyOperations._id;
+    return strategyOperations[strategyOperations.length - 1]._id;
 }

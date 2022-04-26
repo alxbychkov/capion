@@ -203,7 +203,7 @@ export default {
     },
 
     async deposit(value, id) {
-      if (+this.USER_STRATEGIES[0].totalInvestment === 0) {
+      if (+this.USER_STRATEGIES[0].totalInvestment !== 0) {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
         try {
           const { tx, operationId } = await firstStrategyDeposit(id, value);
@@ -236,7 +236,11 @@ export default {
         await strategyAllWithdraw(id, value);
       } else {
         console.log(`2. Withdraw ${id}. `, value);
-        await strategyWithdraw(id, value);
+        const { tx, operationId } = await strategyWithdraw(id, value);
+        console.log(tx, operationId);
+        const txResponse = await signOperation(tx);
+        console.log(txResponse);
+        await putOperation(id, txResponse, operationId);
       }
     },
 
@@ -246,8 +250,8 @@ export default {
       );
       const { tx, operationId } = await rebalanceShare(id, values);
       console.log(tx, operationId);
-      // const txResponse = await signOperation(tx);
-      // console.log(txResponse);
+      const txResponse = await signOperation(tx);
+      console.log(txResponse);
     },
 
     async preTest() {
