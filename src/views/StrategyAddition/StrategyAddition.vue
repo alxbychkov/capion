@@ -106,25 +106,14 @@ export default {
         );
         console.info("Updated strategy with proxy address.");
 
-        // const preResponse = await preTestSetup(newStrategyId);
-        // console.info(
-        //   "New strategy ready. Start to convert coins for other operations."
-        // );
-        // deployedStrategy.preTestSetup = preResponse;
-
-        // localStorage.setItem("preTestSetup", JSON.stringify(preResponse));
-
         this.GET_USER_STRATEGIES({ strategy: deployedStrategy });
-        // this.userStrategies.push(newStrategy.name);
 
         await this.prepareCoins(newStrategyId).then(router.push("/portfolio"));
 
-        // router.push("/portfolio");
       } else if (!userStrategy.pendingProxy) {
         await this.prepareCoins(userStrategy._id).then(
           router.push("/portfolio")
         );
-        // router.push("/portfolio");
       }
     },
 
@@ -132,7 +121,7 @@ export default {
       try {
         const preResponse = await preTestSetup(id);
         console.info(
-          "New strategy ready. Start to convert coins for other operations."
+          "New strategy ready. Start to convert coins for other operations.", preResponse
         );
 
         // const preTestSetup = this.USER_STRATEGIES[0].preTestSetup
@@ -140,6 +129,7 @@ export default {
         //   : localStorage.getItem("preTestSetup")
         //   ? JSON.parse(localStorage.getItem("preTestSetup"))
         //   : {};
+
 
         const coins = prepareCoins(preResponse);
 

@@ -203,7 +203,7 @@ export default {
     },
 
     async deposit(value, id) {
-      if (+this.USER_STRATEGIES[0].totalInvestment !== 0) {
+      if (this.USER_STRATEGIES[0].position === undefined) {
         console.log(`1. Total ${id} investment 0. Deposit: `, value);
         try {
           const { tx, operationId } = await firstStrategyDeposit(id, value);
@@ -261,6 +261,7 @@ export default {
     async updateUserStrategiesData() {
       await this.GET_USER_STRATEGIES();
       this.closeModal();
+      this.$forceUpdate();
     },
 
     closeModal() {
