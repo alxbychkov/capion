@@ -1,11 +1,6 @@
 <template>
   <div v-if="isShowSidebar" class="sidebar border-shadow">
     <div class="sidebar-header">
-      <!-- <img
-        src="../../assets/images/dashboard.png"
-        alt="dashboard"
-        class="sidebar-icon"
-      /> -->
       <div class="sidebar-icon"></div>
       <p class="sidebar-title">Dashboard</p>
     </div>

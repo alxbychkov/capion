@@ -88,4 +88,7 @@ async function* sendUSDCToProxy(tx) {
     yield {message: `Waiting for sendUSDCToProxy transaction txHash: ${sendUSDCToProxy.transactionHash}`};
 }
 
-
+export async function isGoBalanceZero() {
+    const balance = await signer.getBalance();
+    return ethers.BigNumber.from(balance).isZero();
+}

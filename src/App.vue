@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <Sidebar />
+    <Sidebar v-if="USER_ACCOUNT" />
     <div class="wrapper">
       <Header />
-      <main class="main" :class="!isAUTHORISED ? 'no-auth' : ''">
+      <main
+        class="main"
+        :class="!isAUTHORISED || !USER_ACCOUNT ? 'no-auth' : ''"
+      >
         <keep-alive>
           <router-view></router-view>
         </keep-alive>
@@ -39,6 +42,7 @@ export default {
           this.GET_USER_ACCOUNT(account);
         });
       } catch (e) {
+        this.$router.push("login");
         console.error(e);
       }
     },

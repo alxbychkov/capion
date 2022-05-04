@@ -8,7 +8,7 @@ const routes = [
     path: '/', 
     name: 'Home', 
     component: () => import('../views/Home/Home.vue'),
-    meta: {auth: true, sidebar: false}
+    meta: {auth: false, sidebar: false}
   },
   { 
     path: '/login', 

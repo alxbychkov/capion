@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="USER_ACCOUNT">
     <div class="portfolio">
       <div class="portfolio-header">
         <p class="portfolio-header__title">My awesome portfolio</p>
@@ -63,7 +63,6 @@ export default {
     ...mapGetters(["USER_STRATEGIES", "USER_ACCOUNT", "ALL_STRATEGIES"]),
   },
   created() {
-    // this.GET_USER_STRATEGIES();
     this.GET_ALL_STRATEGIES();
   },
 };

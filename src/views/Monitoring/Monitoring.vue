@@ -1,5 +1,8 @@
 <template>
-  <div v-if="strategy.name" class="monitoring-section border-shadow">
+  <div
+    v-if="USER_ACCOUNT && strategy.name"
+    class="monitoring-section border-shadow"
+  >
     <div class="section-header">
       <div class="section__title">{{ strategy.name }}</div>
       <div class="strategy-actions">
@@ -112,7 +115,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["USER_STRATEGIES", "ALL_STRATEGIES"]),
+    ...mapGetters(["USER_STRATEGIES", "ALL_STRATEGIES", "USER_ACCOUNT"]),
   },
   methods: {
     ...mapActions(["GET_ALL_STRATEGIES"]),

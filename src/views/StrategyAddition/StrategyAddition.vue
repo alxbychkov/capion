@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="USER_ACCOUNT">
     <div class="strategy-section">
       <div class="section-header">
         <div class="section__title">Strategy addition</div>
@@ -44,22 +44,19 @@ import { mapGetters, mapActions } from "vuex";
 import {
   createStrategy,
   deployStrategy,
-  getStrategy,
   getStrategyProxyAddress,
   preTestSetup,
   putOperation,
   putStrategy,
 } from "../../core/api";
 import router from "../../router";
-import { prepareCoins, sendDeployProxy, signOperation } from "../../core/eth";
-import { STRATEGIES } from "../../core/config";
+import { isGoBalanceZero, prepareCoins, sendDeployProxy } from "../../core/eth";
 
 export default {
   name: "StrategyAddition",
   data() {
     return {
       allStrategies: [],
-      // userStrategies: [],
     };
   },
   methods: {
@@ -70,6 +67,7 @@ export default {
 
       const userStrategy = this.USER_STRATEGIES.find((s) => s.name === id);
       console.log(userStrategy);
+
       if (userStrategy === undefined || userStrategy.pendingProxy) {
         console.info("Start to create strategy.");
 
@@ -77,70 +75,111 @@ export default {
 
         if (userStrategy === undefined) {
           const newStrategy = await createStrategy(this.USER_ACCOUNT);
+
+          if (!newStrategy) {
+            console.error("Couldn't create strategy. Try again later.");
+            return false;
+          }
+
           newStrategyId = newStrategy["_id"];
           console.info(`Strategy created id : ${newStrategyId}.`);
-
-          this.deactivateAddButton(id);
-
-          await preTestSetup(newStrategyId);
-          console.info("Added coins  to your Wallet.");
         } else {
           newStrategyId = userStrategy._id;
         }
 
+        // check balance
+        if (await isGoBalanceZero()) {
+          if (await preTestSetup(newStrategyId)) {
+            console.info("Added coins to your Wallet.");
+          } else {
+            console.error(
+              "Couldn't add coins to your wallet. Try again later."
+            );
+            return false;
+          }
+        }
+
+        const isStrategyDeployed = userStrategy.operations.find(
+          (o) => o.action === "deployProxy" && o.txStatus === "sent"
+        );
+
         const { tx, operationId } = await deployStrategy(newStrategyId);
-        console.info("Strategy deployed, ready to send transaction.");
+        if (tx && isStrategyDeployed !== undefined) {
+          console.info("Strategy deployed, ready to send transaction.");
+        } else {
+          console.error("Strategy didn't deployed. Try again later.");
+          return false;
+        }
 
-        const txResponse = await this.sendDeployProxyTransaction(tx);
+        // check transaction
+        if (isStrategyDeployed === undefined) {
+          const txResponse = await this.sendDeployProxyTransaction(tx);
+
+          if (txResponse) {
+            await putOperation(newStrategyId, txResponse, operationId);
+            console.info("Transaction sent. Operation added.");
+          } else {
+            console.error("Transaction deployProxy failed.");
+            return false;
+          }
+        }
+
         const proxyAddress = await getStrategyProxyAddress(newStrategyId);
-        console.info(
-          `Transaction sent. Proxy address: ${proxyAddress.data.proxyAddress}.`
-        );
 
-        await putOperation(newStrategyId, txResponse, operationId);
-        console.info("Operation added.");
+        if (proxyAddress) {
+          console.info(`Proxy address: ${proxyAddress.data.proxyAddress}.`);
 
-        const deployedStrategy = await putStrategy(
-          newStrategyId,
-          proxyAddress.data.proxyAddress
-        );
-        console.info("Updated strategy with proxy address.");
+          const deployedStrategy = await putStrategy(
+            newStrategyId,
+            proxyAddress.data.proxyAddress
+          );
 
-        this.GET_USER_STRATEGIES({ strategy: deployedStrategy });
+          if (deployedStrategy) {
+            console.info("Updated strategy with proxy address.");
+          } else {
+            console.error(
+              "Couldn't updated strategy with proxy address. Try again later."
+            );
+            return false;
+          }
 
-        await this.prepareCoins(newStrategyId).then(router.push("/portfolio"));
+          this.GET_USER_STRATEGIES({ strategy: deployedStrategy });
 
+          this.deactivateAddButton(id);
+
+          await this.prepareCoins(newStrategyId).then(
+            router.push("/portfolio")
+          );
+        } else {
+          console.error(`Couldn't get proxyAddress. Try again later.`);
+          return false;
+        }
       } else if (!userStrategy.pendingProxy) {
-        await this.prepareCoins(userStrategy._id).then(
-          router.push("/portfolio")
-        );
+        await this.prepareCoins(userStrategy._id);
       }
     },
 
     async prepareCoins(id) {
       try {
         const preResponse = await preTestSetup(id);
-        console.info(
-          "New strategy ready. Start to convert coins for other operations.", preResponse
-        );
 
-        // const preTestSetup = this.USER_STRATEGIES[0].preTestSetup
-        //   ? this.USER_STRATEGIES[0].preTestSetup
-        //   : localStorage.getItem("preTestSetup")
-        //   ? JSON.parse(localStorage.getItem("preTestSetup"))
-        //   : {};
+        if (preResponse) {
+          console.info(
+            "New strategy ready. Start to convert coins for other operations.",
+            preResponse
+          );
 
+          const coins = prepareCoins(preResponse);
 
-        const coins = prepareCoins(preResponse);
+          for await (let value of coins) {
+            console.log(value.message);
+          }
 
-        for await (let value of coins) {
-          console.log(value.message);
+          router.push("/portfolio");
         }
-
-        // localStorage.removeItem("preTestSetup");
       } catch (e) {
         console.error(e);
-        return;
+        return false;
       }
     },
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="portfolio-section section border-shadow">
+  <div v-if="USER_ACCOUNT" class="portfolio-section section border-shadow">
     <div class="create-header">
       <div class="create-title">Create Portfolio</div>
       <div class="user-account">0x55e3160c3df7d99763af53628b1ef753fb6d056e</div>
@@ -32,6 +32,7 @@
 </template>
 <script>
 import ComingSoon from "../../components/Modals/ComingSoon.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Create",
@@ -40,6 +41,9 @@ export default {
     return {
       isShowModal: true,
     };
+  },
+  computed: {
+    ...mapGetters(["USER_ACCOUNT"]),
   },
 };
 </script>

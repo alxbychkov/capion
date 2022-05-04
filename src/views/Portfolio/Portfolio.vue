@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="USER_ACCOUNT">
     <div
       v-if="USER_STRATEGIES.length"
       class="graph-section section border-shadow"
