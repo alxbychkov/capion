@@ -7,7 +7,7 @@ export async function createStrategy(address) {
     FLEX_STRATEGY.ownerAddress = address;
 
     try {
-        const response = await axios.post(`${API_URL}/strategy`, FLEX_STRATEGY, {
+        const response = await axios.post(`${API_URL}/flex`, FLEX_STRATEGY, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -26,12 +26,7 @@ export async function preTestSetup(id) {
             "amount": 500
         };
 
-        const response = await axios.post(`${API_URL}/strategy/pre-test-setup/${id}`, data, {
-            headers: {
-                Accept: '*/*',
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await axios.post(`${API_URL}/flex/pre-test-setup/${id}/${data.amount}`);
     
         return response.data;
     } catch(err) {
@@ -43,7 +38,7 @@ export async function getStrategy(id) {
     let strategy = {};
 
     try {
-        const response = await axios.get(`${API_URL}/strategy/${id}`);   
+        const response = await axios.get(`${API_URL}/flex/${id}`);   
         strategy = response.data;
     } catch (err) {
         console.error('Connection failded: ', err);
@@ -56,7 +51,7 @@ export async function getUserStrategy(account) {
     let strategies = [];
 
     try {
-        const response = await axios.get(`${API_URL}/strategy`);   
+        const response = await axios.get(`${API_URL}/flex`);   
         const allStrategies = response.data;
 
         strategies = allStrategies.filter(s => s.ownerAddress === account);
@@ -74,7 +69,7 @@ export async function getAllStrategies() {
 
 export async function deployStrategy(id) {
     try {
-        const response = await axios.post(`${API_URL}/strategy/deployProxy/${id}`);
+        const response = await axios.post(`${API_URL}/flex/proxy/${id}`);
         
         const operationId = await getOperationId(id, 'deployProxy');
 
@@ -89,7 +84,7 @@ export async function deployStrategy(id) {
 
 export async function getStrategyProxyAddress(id) {
     try {
-        const address = await axios.get(`${API_URL}/strategy/proxyAddress/${id}`);
+        const address = await axios.get(`${API_URL}/flex/proxy/${id}`);
         return address
     } catch(err) {
         console.error('Can not get proxy address: ', err);
@@ -102,7 +97,7 @@ export async function putStrategy(id, address) {
         FLEX_STRATEGY.proxyAddress = address;
         FLEX_STRATEGY.pendingProxy = false;
 
-        const response = await axios.put(`${API_URL}/strategy/${id}`, FLEX_STRATEGY, {
+        const response = await axios.put(`${API_URL}/flex/${id}`, FLEX_STRATEGY, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -123,7 +118,7 @@ export async function putOperation(id, tx, operationId) {
             "txHash": tx.transactionHash
         }
 
-        const response = await axios.put(`${API_URL}/strategy/${id}/operation/${operationId}`, data, {
+        const response = await axios.put(`${API_URL}/flex/${id}/operation/${operationId}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -142,7 +137,7 @@ export async function firstStrategyDeposit(id, amount) {
         const data = {
             "amount": +amount
         };
-        const response = await axios.post(`${API_URL}/strategy/deposit/${id}`, data, {
+        const response = await axios.post(`${API_URL}/flex/deposit/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -166,7 +161,7 @@ export async function strategyDeposit(id, amount) {
         const data = {
             "amount": amount.toString()
         };
-        const response = await axios.post(`${API_URL}/strategy/increase-position/${id}`, data, {
+        const response = await axios.post(`${API_URL}/flex/increase-position/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -191,7 +186,7 @@ export async function strategyAllWithdraw(id, amount) {
             "swapToUSDC": true,
             "transferToAddress": true
         };
-        const response = await axios.post(`${API_URL}/strategy/withdraw/${id}`, data, {
+        const response = await axios.post(`${API_URL}/flex/withdraw/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -213,7 +208,7 @@ export async function strategyWithdraw(id, amount) {
             "swapToUSDC": true,
             "transferToAddress": true
         };
-        const response = await axios.post(`${API_URL}/strategy/decrease-position/${id}`, data, {
+        const response = await axios.post(`${API_URL}/flex/decrease-position/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -249,7 +244,7 @@ export async function rebalanceShare(id, values) {
             "sushiShare": +values.sushiShare,
             "uniShare": +values.uniShare
         };
-        const response = await axios.post(`${API_URL}/strategy/rebalance/${id}`, data, {
+        const response = await axios.post(`${API_URL}/flex/rebalance/${id}`, data, {
             headers: {
                 Accept: '*/*',
                 'Content-Type': 'application/json'
@@ -273,4 +268,14 @@ async function getOperationId(id, operationName) {
     const strategyOperations = strategy.operations.filter(o => (o.action === operationName && o.txStatus === 'pending'));
 
     return strategyOperations[strategyOperations.length - 1]._id;
+}
+
+export async function checkETHBalance(id) {
+    try {
+        const response = await axios.get(`${API_URL}/flex/personal-balance/${id}`);
+    
+        return response.data;
+    } catch(err) {
+        console.error('Personal balance failed: ', err);
+    }
 }

@@ -42,6 +42,7 @@
 /* eslint-disable no-unused-vars */
 import { mapGetters, mapActions } from "vuex";
 import {
+  checkETHBalance,
   createStrategy,
   deployStrategy,
   getStrategyProxyAddress,
@@ -88,7 +89,9 @@ export default {
         }
 
         // check balance
-        if (await isGoBalanceZero()) {
+        const ETHBalance = await checkETHBalance(newStrategyId);
+
+        if (+ETHBalance === 0) {
           if (await preTestSetup(newStrategyId)) {
             console.info("Added coins to your Wallet.");
           } else {
@@ -104,9 +107,10 @@ export default {
         );
 
         const { tx, operationId } = await deployStrategy(newStrategyId);
+
         if (tx && isStrategyDeployed !== undefined) {
           console.info("Strategy deployed, ready to send transaction.");
-        } else {
+        } else if (!tx) {
           console.error("Strategy didn't deployed. Try again later.");
           return false;
         }
@@ -115,7 +119,7 @@ export default {
         if (isStrategyDeployed === undefined) {
           const txResponse = await this.sendDeployProxyTransaction(tx);
 
-          if (txResponse) {
+          if (txResponse.txStatus) {
             await putOperation(newStrategyId, txResponse, operationId);
             console.info("Transaction sent. Operation added.");
           } else {
