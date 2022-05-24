@@ -277,5 +277,6 @@ export async function checkETHBalance(id) {
         return response.data;
     } catch(err) {
         console.error('Personal balance failed: ', err);
+        return false;
     }
 }

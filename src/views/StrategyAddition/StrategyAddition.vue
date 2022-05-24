@@ -66,7 +66,7 @@ export default {
     async addStrategyHandler(id) {
       if (!id) return;
 
-      const userStrategy = this.USER_STRATEGIES.find((s) => s.name === id);
+      let userStrategy = this.USER_STRATEGIES.find((s) => s.name === id);
       console.log(userStrategy);
 
       if (userStrategy === undefined || userStrategy.pendingProxy) {
@@ -83,6 +83,7 @@ export default {
           }
 
           newStrategyId = newStrategy["_id"];
+          userStrategy = newStrategy;
           console.info(`Strategy created id : ${newStrategyId}.`);
         } else {
           newStrategyId = userStrategy._id;
@@ -91,7 +92,7 @@ export default {
         // check balance
         const ETHBalance = await checkETHBalance(newStrategyId);
 
-        if (+ETHBalance === 0) {
+        if (ETHBalance && +ETHBalance === 0) {
           if (await preTestSetup(newStrategyId)) {
             console.info("Added coins to your Wallet.");
           } else {
@@ -100,6 +101,9 @@ export default {
             );
             return false;
           }
+        } else {
+          console.error('Could not check balance. Try again later.');
+          return false;
         }
 
         const isStrategyDeployed = userStrategy.operations.find(
