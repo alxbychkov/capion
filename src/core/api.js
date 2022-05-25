@@ -20,13 +20,13 @@ export async function createStrategy(address) {
     }    
 }
 
-export async function preTestSetup(id) {
+export async function preTestSetup(id, address = '') {
     try {
         const data = {
-            "amount": 500
+            "amount": 1000
         };
 
-        const response = await axios.post(`${API_URL}/flex/pre-test-setup/${id}/${data.amount}`);
+        const response = await axios.post(`${API_URL}/flex/pre-test-setup/${id}/${data.amount}/${address}`);
     
         return response.data;
     } catch(err) {
@@ -85,7 +85,7 @@ export async function deployStrategy(id) {
 export async function getStrategyProxyAddress(id) {
     try {
         const address = await axios.get(`${API_URL}/flex/proxy/${id}`);
-        return address
+        return address;
     } catch(err) {
         console.error('Can not get proxy address: ', err);
         return false;
@@ -277,6 +277,6 @@ export async function checkETHBalance(id) {
         return response.data;
     } catch(err) {
         console.error('Personal balance failed: ', err);
-        return false;
+        return undefined;
     }
 }

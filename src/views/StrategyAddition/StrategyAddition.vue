@@ -67,7 +67,6 @@ export default {
       if (!id) return;
 
       let userStrategy = this.USER_STRATEGIES.find((s) => s.name === id);
-      console.log(userStrategy);
 
       if (userStrategy === undefined || userStrategy.pendingProxy) {
         console.info("Start to create strategy.");
@@ -92,17 +91,16 @@ export default {
         // check balance
         const ETHBalance = await checkETHBalance(newStrategyId);
 
-        if (ETHBalance && +ETHBalance === 0) {
-          if (await preTestSetup(newStrategyId)) {
+        if (ETHBalance !== undefined && +ETHBalance === 0) {
+          if (await preTestSetup(newStrategyId, this.USER_ACCOUNT)) {
             console.info("Added coins to your Wallet.");
           } else {
             console.error(
               "Couldn't add coins to your wallet. Try again later."
             );
-            return false;
           }
-        } else {
-          console.error('Could not check balance. Try again later.');
+        } else if (ETHBalance === undefined) {
+          console.error("Could not check balance. Try again later.");
           return false;
         }
 
@@ -123,7 +121,7 @@ export default {
         if (isStrategyDeployed === undefined) {
           const txResponse = await this.sendDeployProxyTransaction(tx);
 
-          if (txResponse.txStatus) {
+          if (txResponse.status) {
             await putOperation(newStrategyId, txResponse, operationId);
             console.info("Transaction sent. Operation added.");
           } else {

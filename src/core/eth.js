@@ -45,7 +45,6 @@ export async function sendDeployProxy(txData) {
         transactionHash: tx.hash,
         status: 'sent'
     };
-
     return response;
 }
 
